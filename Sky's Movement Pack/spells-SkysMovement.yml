@@ -1,0 +1,388 @@
+ ##################################
+ # Sky's Movement & Mechanic Pack #
+ ##################################
+ # NOTES:
+  # Some spells disabled by default, as some have conflicting inputs.
+  # Double sneaking MIGHT cause server lag, be sure to check for MS updates!
+ 
+ ########
+ # DASH #
+ ########
+ # Dash forward on offhand swap.
+ # Because there is no way to move "forward" relative to the direction you are moving,...
+ # but only your line of sight, this spell always goes "forward".
+DashINPUT:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - offhandswap
+    cancel-default-action: true
+    modifiers:
+        - hasitem bedrock required
+    spells:
+        - DashLeap(mode=hard)
+        - DashInvuln(mode=hard)
+        # - DashHitbox(mode=hard)
+    cooldown: 1
+DashLeap:
+    spell-class: ".instant.LeapSpell"
+    forward-velocity: 10
+    upward-velocity: 1
+    cancel-damage: true
+    # cost:
+        # - hunger 1
+DashInvuln:
+    spell-class: ".buff.InvulnerabilitySpell"
+    damage-causes:
+        - entity_attack
+    duration: 0.5
+    toggle: false
+    
+ # Damage mobs through your dash.
+DashHitbox:
+    spell-class: ".MultiSpell"
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes, husks
+    obey-los: false
+    spells:
+        - DashAOE
+        - DELAY 1
+        - DashAOE
+        - DELAY 1
+        - DashAOE
+        - DELAY 1
+        - DashAOE
+        - DELAY 1
+        - DashAOE
+DashAOE:
+    spell-class: ".targeted.AreaEffectSpell"
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes, husks
+    horizontal-radius: 1
+    vertical-radius: 1
+    point-blank: true
+    beneficial: false
+    spells:
+        - DashPain
+DashPain:
+    spell-class: ".targeted.PainSpell"
+    beneficial: false
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes, husks
+    can-cast-by-command: true
+    ignore-armor: true
+    damage: 1
+    
+ # Automatically turn around when you dash through a mob.
+DashTurnaroundPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted DashPain # Replace the DashPain spell with a targeted dummy if you dont want to do damage.
+    modifiers:
+        - buffactive DashTurnaroundToggle required
+    spells:
+        - DashTurnaroundDelay
+    cooldown: 1
+DashTurnaroundDelay:
+    spell-class: ".MultiSpell"
+    spells:
+        - DELAY 5
+        - DashTurnaround(mode=hard)
+DashTurnaround:
+    spell-class: ".instant.DummySpell"
+    variable-mods-casted:
+        - meta_location_yaw +180
+        
+ # "Command" to turn auto-turnaround off and on.
+DashTurnaroundToggle:
+    spell-class: ".buff.DummySpell"
+    incantations: ["/DashToggle"]
+    duration: 0
+    str-cast-self: "&3[&bDash Auto-TurnAround&3]&f: &eON"
+    str-fade: "&3[&bDash Auto-TurnAround&3]&f: &eOFF"
+    
+ #########
+ # DODGE #
+ #########
+ # Teleports the player a few blocks back if they press offhand swap right before taking damage.
+ # Uses mob passives.
+DodgePassive1:
+    spell-class: ".PassiveSpell"
+    can-trigger: players
+    triggers:
+        - offhandswap
+    # cancel-default-action: true
+    spells:
+        - DodgeBuffDummy(mode=hard)
+DodgeBuffDummy:
+    spell-class: ".buff.DummySpell"
+    duration: 1
+DodgePassive2:
+    spell-class: ".PassiveSpell"
+    can-trigger: players
+    triggers:
+        # - takedamage
+        - takedamage BLOCK_EXPLOSION
+        - takedamage CONTACT
+        - takedamage DRAGON_BREATH
+        - takedamage ENTITY_ATTACK
+        - takedamage ENTITY_EXPLOSION
+        - takedamage ENTITY_SWEEP_ATTACK
+        - takedamage FALLING_BLOCK
+        - takedamage MAGIC
+        - takedamage PROJECTILE
+        - takedamage THORNS
+    cancel-default-action: true
+    modifiers: 
+        - buffactive DodgeBuffDummy required
+    spells:
+        - DodgeDodge(mode=hard)
+DodgeDodge:
+    spell-class: ".instant.LeapSpell"
+    forward-velocity: -9
+    upward-velocity: 1
+    cancel-damage: true
+
+ #########
+ # CRAWL #
+ #########
+ # Forces the player to crawl upon double-tapping sneak.
+ # On demand; no 1-block-tall spaces required (makes its own).
+ # Uses a barrier block, so player collisions will be effected.
+ # Uses a pulser instead of a glide/windglide because those spells are unreliable.
+CrawlINPUT1:
+    spell-class: ".PassiveSpell"
+    triggers:
+        # - startsneak
+    spells:
+        - CrawlPassiveMulti
+CrawlPassiveMulti:
+    spell-class: ".MultiSpell"
+    spells:
+        - DELAY 1
+        - CrawlPassiveBuff
+CrawlPassiveBuff:
+    spell-class: ".buff.DummySpell"
+    duration: 0.5 # Max time in between sneak inputs.
+CrawlINPUT2:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - startsneak
+    modifiers:
+        - buffactive CrawlPassiveBuff required 
+    spells:
+        - ForceCrawlActivate
+ 
+ForceCrawlActivate:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - onground required
+    spells:
+        - ForceCrawlDummy(mode=hard)
+        - DELAY 1
+        - ForceCrawlMultiLoop
+ForceCrawlDummy:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+    # str-cast-self: "&bForceCrawl ACTIVE"
+    # str-fade: "&bForceCrawl OFF"
+ForceCrawlMultiLoop:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - buffactive ForceCrawlDummy required
+    spells:
+        - ForceCrawlOffsetLocation_Sustained
+        - DELAY 2 #Every 2 ticks ensures good performance with speed potions craftable in survival. For increased server performance, raise this to 3-5. 
+        - ForceCrawlMultiLoop
+ForceCrawlOffsetLocation_Sustained:
+    spell-class: ".targeted.OffsetLocationSpell"
+    target-self: true
+    absolute-offset: 0,1,0
+    spell: ForceCrawlPulser
+ForceCrawlPulser:
+    spell-class: ".targeted.PulserSpell"
+    cooldown: 0
+    range: 10
+    total-pulses: 2
+    interval: 2 # Should match ForceCrawlMultiLoop's DELAY value
+    max-distance: 500
+    block-type: barrier
+    spells:
+        - nonetargeted
+        
+ # Quick Forced Crawl
+ # Like a quick duck down since it displaces yout hurtbox.
+QuickCrawlOffsetLocation:
+    spell-class: ".targeted.OffsetLocationSpell"
+    target-self: true
+    absolute-offset: 0,1,0
+    spell: QuickCrawlPulser
+QuickCrawlPulser:
+    spell-class: ".targeted.PulserSpell"
+    cooldown: 0
+    range: 10
+    total-pulses: 10
+    interval: 2
+    max-distance: 500
+    block-type: barrier
+    spells:
+        - nonetargeted
+   
+ #########
+ # SLIDE #
+ #########  
+ # A quick running slide after pressing the sneak button while sprinting on the ground.
+ # On the ground being required since it looks a bit odd to the player and observers if cast in the air.
+SlideINPUT:
+    spell-class: ".PassiveSpell"
+    triggers:
+        # - startsneak
+    modifiers:
+        - sprinting required
+        - onground required
+    spells:
+        - SlideGlide   
+    cooldown: 0.6        
+SlideGlide:
+    spell-class: ".buff.WindglideSpell"
+    duration: 0.5
+    block-collision-dmg: true
+    cancel-on-collision: true
+    velocity: 7
+    height: 0
+    modifiers:
+        - buffactive CrawlGlide denied
+        
+ ##############
+ # WALL CLIMB #
+ ##############
+ # Climb/run a wall by sneaking after jumping.
+ # "Wall climb/run mode" turns off as soon as you touch the ground.
+WallClimbINPUT:
+    spell-class: ".PassiveSpell"
+    triggers:
+        # - startsneak
+    spells:
+        - WallClimbMultiloop(mode=hard)
+ 
+WallClimbMultiloop:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - onground denied
+    spells:
+        - WallClimbBeam(mode=hard)
+        - DELAY 3
+        - WallClimbMultiloop
+WallClimbBeam:
+    spell-class: ".instant.BeamSpell"
+    relative-offset: "0.1,1.6,0"
+    max-distance: 1
+    hit-radius: 0.1
+    beneficial: false
+    change-pitch: false
+    stop-on-hit-ground: true
+    spell: nonetargeted
+    spell-on-hit-entity: nonetargeted
+    spell-on-hit-ground: WallClimbDummy(mode=full)
+    # effects:
+       # 1:
+        # position: caster
+        # effect: particles
+        # particle-name: flame
+        # height-offset: 1
+        # count: 1
+        # speed: 0
+        # horiz-spread: 0   
+        # vert-spread: 0
+
+WallClimbDummy:
+    spell-class: ".targeted.DummySpell"
+    # str-cast-self: "Success!"
+
+WallClimbPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WallClimbDummy
+    spells:
+        - WallClimbLeap(mode=hard)
+WallClimbLeap:
+    spell-class: ".instant.LeapSpell"
+    forward-velocity: 1
+    upward-velocity: 7
+    cancel-damage: true
+
+ ############
+ # WALL RUN #
+ ############   
+ # Wall Run
+WallRunINPUT:
+    spell-class: ".PassiveSpell"
+    triggers:
+        # - startsneak
+    spells:
+        - WallRunMultiloop(mode=hard)
+ 
+WallRunMultiloop:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - onground denied
+    spells:
+        - WallRunBeamL(mode=hard)
+        - WallRunBeamR(mode=hard)
+        - DELAY 1
+        - WallRunMultiloop
+        
+WallRunBeamL:
+    spell-class: ".instant.BeamSpell"
+    relative-offset: "-1,1,-0.5"
+    max-distance: 1
+    hit-radius: 0.1
+    beneficial: false
+    change-pitch: false
+    stop-on-hit-ground: true
+    spell: nonetargeted
+    spell-on-hit-entity: nonetargeted
+    spell-on-hit-ground: WallRunDummy(mode=full)
+    # effects:
+       # 1:
+        # position: caster
+        # effect: particles
+        # particle-name: flame
+        # height-offset: 1
+        # count: 1
+        # speed: 0
+        # horiz-spread: 0   
+        # vert-spread: 0
+WallRunBeamR:
+    spell-class: ".instant.BeamSpell"
+    relative-offset: "-1,1,0.5"
+    max-distance: 1
+    hit-radius: 0.1
+    beneficial: false
+    change-pitch: false
+    stop-on-hit-ground: true
+    spell: nonetargeted
+    spell-on-hit-entity: nonetargeted
+    spell-on-hit-ground: WallRunDummy(mode=full)
+    # effects:
+       # 1:
+        # position: caster
+        # effect: particles
+        # particle-name: flame
+        # height-offset: 1
+        # count: 1
+        # speed: 0
+        # horiz-spread: 0   
+        # vert-spread: 0
+        
+WallRunDummy:
+    spell-class: ".targeted.DummySpell"
+    # str-cast-self: "Success!"
+        
+WallRunPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WallRunDummy
+    spells:
+        - WallRunLeap(mode=hard)
+WallRunLeap:
+    spell-class: ".instant.LeapSpell"
+    forward-velocity: 7
+    upward-velocity: 1
+    cancel-damage: true

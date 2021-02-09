@@ -1,0 +1,209 @@
+ ############################
+ # Elemental Reactions v1.0 #
+ ############################
+ # Notes:
+  # A very simple interactions example.
+  # How interactions were meant to be used.
+  
+magic-items:
+    skyFireWand:
+        type: "blaze_rod"
+        name: "&dWand of Infernal Flames"
+        lore: "&9[&bLeft Click&9] &aFlame Bolt"
+    skyWindBook:
+        type: "knowledge_book"
+        name: "&aBook of Blustering Winds"
+        lore: "&9[&bRight Click&9] &aAir Slash"
+  
+FlameBolt:  
+    spell-class: ".instant.ParticleProjectileSpell"
+    can-cast-by-command: false
+    can-target: monsters, players, animals, invisibles, spiders, slimes, husks, ghasts, withers
+    always-granted: true
+    name: "Flame Bolt"
+    cost: [mana 0]
+    str-cost: 0 mana
+    cooldown: 0.7
+    str-on-cooldown: ""
+    cast-item: skyFireWand
+    relative-offset: "0,1.4,0"
+    projectile-velocity: 20
+    projectile-gravity: -0.01
+    projectile-spread: 0.01
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-distance: 15 
+    hit-radius: 1.2
+    hit-players: true
+    hit-ground: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: true
+    spell: FlameBoltTMulti
+    interactions:
+    effects:
+        1:
+          position: special
+          effect: particles
+          particle-name: redstone
+          color: ffa25a
+          horiz-spread: 0.1
+          vert-spread: 0.1
+          size: 1
+          count: 5
+        2:
+          position: special
+          effect: particles
+          particle-name: flame
+          count: 5
+          speed: 0.03
+          horiz-spread: 0.2      
+          vert-spread: 0.2
+        3:
+          position: caster
+          effect: sound
+          sound: item.firecharge.use
+          volume: 1
+          pitch: 0.5
+FlameBoltTMulti:
+    spell-class: ".TargetedMultiSpell"
+    stop-on-fail: false
+    require-entity-target: false
+    spells:
+        - FlameBoltCombust
+        - DELAY 1
+        - FlameBoltPain
+FlameBoltPain:
+    spell-class: ".targeted.PainSpell"
+    damage: 3
+    range: 20
+    ignore-armor: false
+    check-plugins: true          
+FlameBoltCombust:
+    spell-class: ".targeted.CombustSpell"
+    range: 20
+    fire-ticks: 60
+    fire-tick-damage: 1
+    prevent-immunity: true
+    target-players: true
+    check-plugins: true
+    str-no-target: ""
+    
+AirSlash:  
+    spell-class: ".instant.ParticleProjectileSpell"
+    can-cast-by-command: false
+    can-target: monsters, players, animals, invisibles, spiders, slimes, husks, ghasts, withers
+    always-granted: true
+    name: "Air Slash"
+    cost: [mana 0]
+    str-cost: 0 mana
+    cooldown: 0.7
+    str-on-cooldown: ""
+    right-click-cast-item: skyWindBook
+    relative-offset: "0,1.4,0"
+    projectile-velocity: 30 # Must be faster
+    projectile-gravity: -0.01
+    projectile-spread: 0.01
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-distance: 15 
+    hit-radius: 1.2
+    hit-players: true
+    hit-ground: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: true
+    spell: AirSlashForcetoss
+    interactions:
+        - FlameBolt PyroAeroInteraction
+    effects:
+        1:
+          position: special
+          effect: particles
+          particle-name: redstone
+          color: 34dede
+          horiz-spread: 0.1
+          vert-spread: 0.1
+          size: 1
+          count: 5
+        2:
+          position: special
+          effect: particles
+          particle-name: sweep_attack
+          count: 1
+          speed: 0.03
+          horiz-spread: 0.2      
+          vert-spread: 0.2
+        3:
+          position: caster
+          effect: sound
+          sound: entity.player.attack.sweep
+          volume: 1
+          pitch: 0.5
+AirSlashForcetoss:
+    spell-class: ".targeted.ForcetossSpell"
+    range: 15
+    damage: 3
+    horizontal-force: 7
+    vertical-force: 3
+    check-plugins: true
+    str-no-target: ""
+    str-cast-self: ""
+    
+PyroAeroInteraction:
+    spell-class: ".targeted.AreaEffectSpell"
+    always-granted: true
+    helper-spell: true
+    fail-if-no-targets: false
+    horizontal-radius: 3
+    vertical-radius: 3
+    spells:
+        - PyroAeroPain
+        - SuperCombust
+        - SuperForcetoss
+    effects:
+      1:
+        position: special
+        effect: effectlibentity
+        effectlib:
+            class: SphereEffect
+            particle: soul_fire_flame
+            iterations: 2
+            radius: 2
+            particles: 50
+            period: 1
+            visibleRange: 625
+      2:
+        position: special
+        effect: sound
+        sound: entity.firework_rocket.large_blast
+        volume: 1
+        pitch: 1
+PyroAeroPain:
+    spell-class: ".targeted.PainSpell"
+    damage: 6
+    range: 20
+    ignore-armor: false
+    check-plugins: true  
+SuperCombust:
+    spell-class: ".targeted.CombustSpell"
+    range: 20
+    fire-ticks: 60
+    fire-tick-damage: 2
+    prevent-immunity: true
+    target-players: true
+    check-plugins: true
+    str-no-target: ""
+SuperForcetoss:
+    spell-class: ".targeted.ForcetossSpell"
+    range: 15
+    damage: 3
+    horizontal-force: 9
+    vertical-force: 5
+    check-plugins: true
+    str-no-target: ""
+    str-cast-self: ""

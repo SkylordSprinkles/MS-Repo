@@ -1,0 +1,159 @@
+ # Universal Targeters
+None:
+    spell-class: ".instant.DummySpell"
+    helper-spell: true
+    can-cast-by-command: false
+
+NoneTargeted:
+    spell-class: ".targeted.DummySpell"
+    helper-spell: true
+    can-cast-by-command: false
+
+NoneAoe:
+    spell-class: ".targeted.AreaEffectSpell"
+    spells:
+        - NoneTargeted
+    helper-spell: true
+    can-cast-by-command: false
+
+ # Universal Pains
+pain1: &PainAnchor
+    spell-class: ".targeted.PainSpell"
+    beneficial: false
+    can-target: players, nonplayers, invisibles, monsters, animals, slimes, wolves
+    can-cast-by-command: true
+    #helper-spell: true
+    damage: 1
+
+pain2:
+    <<: *PainAnchor
+    damage: 2
+
+pain3:
+    <<: *PainAnchor
+    damage: 3
+
+pain4:
+    <<: *PainAnchor
+    damage: 4
+
+pain5:
+    <<: *PainAnchor
+    damage: 5
+
+pain6:
+    <<: *PainAnchor
+    damage: 6
+
+pain7:
+    <<: *PainAnchor
+    damage: 7
+
+pain8:
+    <<: *PainAnchor
+    damage: 8
+
+pain9:
+    <<: *PainAnchor
+    damage: 9
+
+pain10:
+    <<: *PainAnchor
+    damage: 10
+
+pain11:
+    <<: *PainAnchor
+    damage: 11
+
+ # Universal Piercing Pains
+pain1p: &PainPierceAnchor
+    spell-class: ".targeted.PainSpell"
+    beneficial: false
+    can-target: players, nonplayers, invisibles, monsters, animals, slimes, wolves
+    can-cast-by-command: false
+    helper-spell: true
+    damage: 1
+    ignore-armor: true
+
+pain2p:
+    <<: *PainPierceAnchor
+    damage: 2
+
+pain3p:
+    <<: *PainPierceAnchor
+    damage: 3
+
+pain4p:
+    <<: *PainPierceAnchor
+    damage: 4
+
+pain5p:
+    <<: *PainPierceAnchor
+    damage: 5
+
+pain6p:
+    <<: *PainPierceAnchor
+    damage: 6
+
+pain7p:
+    <<: *PainPierceAnchor
+    damage: 7
+
+pain8p:
+    <<: *PainPierceAnchor
+    damage: 8
+
+pain9p:
+    <<: *PainPierceAnchor
+    damage: 9
+
+pain10p:
+    <<: *PainPierceAnchor
+    damage: 10
+
+ # Universal Heals
+heal1: &HealAnchor
+    target-self: true
+    spell-class: ".targeted.HealSpell"
+    can-cast-by-command: false
+    helper-spell: true
+    can-target: monsters,players,invisibles,animals
+    heal-amount: 1
+    beneficial: true
+    cancel-if-full: true
+
+heal2:
+    <<: *HealAnchor
+    heal-amount: 2
+
+heal3:
+    <<: *HealAnchor
+    heal-amount: 3
+
+heal4:
+    <<: *HealAnchor
+    heal-amount: 4
+
+heal5:
+    <<: *HealAnchor
+    heal-amount: 5
+
+heal6:
+    <<: *HealAnchor
+    heal-amount: 6
+
+heal7:
+    <<: *HealAnchor
+    heal-amount: 7
+
+heal8:
+    <<: *HealAnchor
+    heal-amount: 8
+
+heal9:
+    <<: *HealAnchor
+    heal-amount: 9
+
+heal10:
+    <<: *HealAnchor
+    heal-amount: 10

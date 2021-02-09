@@ -1,0 +1,854 @@
+ #############################################
+ # Modular Body Part Hitboxes Prototype v2.0 #
+ #############################################
+ # v2.5 Changes:
+  # differentiated "hurtboxes" and "hitboxes"
+  # added on takedamage hurtboxes
+  # tweaked hurtbox relative-offsets
+  # added backstab hurtbox
+  # extra effects on certain body parts
+  # anchors
+  # MOB PASSIVES (v2.5)
+  
+ # Notes:
+  # Not included are infrastructure spells such as "pain1".
+  # Need to work on str's (used broadcasts) and...
+  # the damage-dealing mechanism. The AoE pains can miss if the target is moving fast.
+  
+ #####################
+ # Modular Hurtboxes # 
+ #####################
+ # Hurtbox Activation Mechanism 1
+ # Hurtboxes only appear when target takes damage.
+ # Slightly less accurate than Mechanism 2.
+HurtboxActivationPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - takedamage
+    modifiers:
+        - buffactive HurtboxALWAYSON required
+    spells:
+        - HurtboxActivationMulti
+HurtboxALWAYSON:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+    str-cast-self: "&bHurtboxes: ON"
+    str-fade: "&bHurtboxes: OFF"
+HurtboxActivationMulti:
+    spell-class: ".MultiSpell"
+    spells:    
+        - HeadHurtbox(mode=hard)
+        - BodyHurtbox(mode=hard)
+        - BackHurtbox(mode=hard)
+        - RArmHurtbox(mode=hard)
+        - LArmHurtbox(mode=hard)
+        - LegsHurtbox(mode=hard)
+        - DELAY 1
+        - HeadHurtbox(mode=hard)
+        - BodyHurtbox(mode=hard)
+        - BackHurtbox(mode=hard)
+        - RArmHurtbox(mode=hard)
+        - LArmHurtbox(mode=hard)
+        - LegsHurtbox(mode=hard)
+        - DELAY 1
+        - HeadHurtbox(mode=hard)
+        - BodyHurtbox(mode=hard)
+        - BackHurtbox(mode=hard)
+        - RArmHurtbox(mode=hard)
+        - LArmHurtbox(mode=hard)
+        - LegsHurtbox(mode=hard)
+        
+ # Hurtboxes for Mechanism 1
+HeadHurtbox: &HurtboxAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1.7,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.4
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+BodyHurtbox:
+    <<: *HurtboxAnchor
+    relative-offset: "0.2,1,0"
+BackHurtbox:
+    <<: *HurtboxAnchor
+    relative-offset: "-0.2,1,0"
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: f23333
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+RArmHurtbox:
+    <<: *HurtboxAnchor
+    relative-offset: "0,1,0.4"
+LArmHurtbox:
+    <<: *HurtboxAnchor
+    relative-offset: "0,1,-0.4"
+LegsHurtbox:
+    <<: *HurtboxAnchor
+    relative-offset: "0,0.3,0"
+        
+ # Hurtbox Activation Mechanism 2
+ # Always on after activation.
+ # 12 spells cast/second/player.
+ # Also a hurtbox-position-tweaking debug mode.
+HurtboxesSustainedActivate:
+    spell-class: ".MultiSpell"
+    spells:
+        - HurtboxesSustainedDummy(mode=hard)
+        - DELAY 1
+        - HurtboxesSustainedMultiLoop
+HurtboxesSustainedDummy:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+    str-cast-self: "&bHurtboxes ON"
+    str-fade: "&bHurtboxes OFF"
+HurtboxesSustainedMultiLoop:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - buffactive HurtboxesSustainedDummy required
+    spells:
+        - HeadHurtbox2(mode=hard)
+        - BodyHurtbox2(mode=hard)
+        - BackHurtbox2(mode=hard)
+        - RArmHurtbox2(mode=hard)
+        - LArmHurtbox2(mode=hard)
+        - LegsHurtbox2(mode=hard)
+        - DELAY 10
+        - HurtboxesSustainedMultiLoop
+             
+ # Hurtboxes for Mechanism 2
+HeadHurtbox2: &HurtboxAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1.7,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.4
+    hit-radius: 0.4
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+BodyHurtbox2:
+    <<: *HurtboxAnchor
+    relative-offset: "0.2,1,0"
+BackHurtbox2:
+    <<: *HurtboxAnchor
+    relative-offset: "-0.2,1,0"
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: f23333
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+RArmHurtbox2:
+    <<: *HurtboxAnchor
+    relative-offset: "0,1,0.4"
+LArmHurtbox2:
+    <<: *HurtboxAnchor
+    relative-offset: "0,1,-0.4"
+LegsHurtbox2:
+    <<: *HurtboxAnchor
+    relative-offset: "0,0.3,0"
+
+ #####################
+ #     Hitboxes      #
+ #####################
+ # Hitbox Mechanism 1
+ # Activated upon all attacks and spells.
+ # Needs ops-ignore-cooldowns: false.
+HitboxPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - givedamage
+    modifiers:
+        - buffactive HitboxALWAYSON required
+    spells:
+        - EpeeThrust
+    cooldown: 0.6
+HitboxALWAYSON:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+    str-cast-self: "&bHitboxes: ON"
+    str-fade: "&bHitboxes: OFF"
+EpeeThrust:
+    spell-class: ".MultiSpell"
+    spells:
+        - DELAY 1
+        - EpeeThrustProj
+EpeeThrustProj:
+    spell-class: ".instant.ParticleProjectileSpell"
+    str-on-cooldown: ""
+    projectile-velocity: 25
+    projectile-gravity: -0.01
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-distance: 5
+    hit-radius: 0.4
+    hit-players: false
+    hit-ground: true
+    stop-on-hit-entity: false
+    stop-on-hit-ground: true
+    spell: nonetargeted
+    relative-offset: "-0.3,1.6,0"
+    interactions:
+        - HeadHurtbox HeadTouch
+        - BodyHurtbox BodyTouch
+        - BackHurtbox BackTouch
+        - RArmHurtbox RArmTouch
+        - LArmHurtbox LArmTouch
+        - LegsHurtbox LegsTouch
+        - HeadHurtbox_MOB HeadTouch
+        - BodyHurtbox_MOB BodyTouch
+        - BackHurtbox_MOB BackTouch
+        - RArmHurtbox_MOB RArmTouch
+        - LArmHurtbox_MOB LArmTouch
+        - LegsHurtbox_MOB LegsTouch
+        - HeadHurtbox_SPIDER HeadTouch_SPIDER
+        - ThoraxHurtbox_SPIDER ThoraxTouch_SPIDER
+        - AbdomenHurtbox_SPIDER AbdomenTouch_SPIDER
+        - RLegHurtbox_SPIDER RLegTouch_SPIDER
+        - LLegHurtbox_SPIDER LLegTouch_SPIDER
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 177013
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # count: 5
+ 
+ # Hitbox Mechanism 2
+ # Sustained hitbox that follows crosshair.
+CrosshairBladeActivate:
+    spell-class: ".MultiSpell"
+    spells:
+        - CrosshairBladeDummy(mode=hard)
+        - DELAY 1
+        - CrosshairBladeMultiLoop
+CrosshairBladeDummy:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+    str-cast-self: "&bCrosshairBlade ACTIVE"
+    str-fade: "&bCrosshairBlade OFF"
+CrosshairBladeMultiLoop:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - buffactive CrosshairBladeDummy required
+    spells:
+        - CrosshairBladeHitbox(mode=hard)
+        - DELAY 1
+        - CrosshairBladeMultiLoop
+CrosshairBladeHitbox:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "2,1.6,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.5
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    interactions:
+        - HeadHurtbox2 HeadTouch
+        - BodyHurtbox2 BodyTouch
+        - BackHurtbox2 BackTouch
+        - RArmHurtbox2 RArmTouch
+        - LArmHurtbox2 LArmTouch
+        - LegsHurtbox2 LegsTouch
+    spell: nonetargeted
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: f53838
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            speed: 0
+            count: 1
+            
+ # Interaction products
+HeadTouch: &TouchAnchor
+    spell-class: ".targeted.AreaEffectSpell"
+    fail-if-no-targets: false
+    can-target: players
+    horizontal-radius: 0.5
+    vertical-radius: 0.5
+    spells:
+        - pain2
+        - HitboxNausea
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3030
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Head"
+        range: 25
+BodyTouch:
+    <<: *TouchAnchor
+    spells:
+        - pain1
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3083
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Body"
+        range: 25
+BackTouch:
+    <<: *TouchAnchor
+    spells:
+        - pain5
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3083
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Back"
+        range: 25
+RArmTouch:
+    <<: *TouchAnchor
+    spells:
+        - pain1
+        - HitboxWeakness
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: 4f30db
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Right Arm"
+        range: 25
+LArmTouch:
+    <<: *TouchAnchor
+    spells:
+        - pain1
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db9130
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Left Arm"
+        range: 25
+LegsTouch:
+    <<: *TouchAnchor
+    spells:
+        - pain1
+        - HitboxSlow
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: 6cdb30
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Legs"
+        range: 25
+        
+ # Hitbox Extra Effects
+HitboxNausea:
+    spell-class: ".targeted.PotionEffectSpell"
+    type: nausea
+    duration: 85
+    strength: 1
+    targeted: true
+    ambient: true
+    hidden: true
+HitboxWeakness:
+    spell-class: ".targeted.PotionEffectSpell"
+    type: weakness
+    duration: 60
+    strength: 0
+    targeted: true
+    ambient: true
+    hidden: true
+HitboxSlow:
+    spell-class: ".targeted.PotionEffectSpell"
+    type: slowness
+    duration: 60
+    strength: 1
+    targeted: true
+    ambient: true
+    hidden: true
+
+ #####################
+ #    Mob Support    #
+ #####################
+ZombieHitbox:
+    spell-class: ".PassiveSpell"
+    ignore-cancelled: false
+    cast-without-target: true
+    can-trigger: zombies
+    triggers:
+        - takedamage
+    spells:
+        - HurtboxActivationMulti_MOB(mode=hard)
+HurtboxActivationMulti_MOB:
+    spell-class: ".MultiSpell"
+    spells:    
+        - HeadHurtbox_MOB(mode=hard)
+        - BodyHurtbox_MOB(mode=hard)
+        - BackHurtbox_MOB(mode=hard)
+        - RArmHurtbox_MOB(mode=hard)
+        - LArmHurtbox_MOB(mode=hard)
+        - LegsHurtbox_MOB(mode=hard)
+        - DELAY 1
+        - HeadHurtbox_MOB(mode=hard)
+        - BodyHurtbox_MOB(mode=hard)
+        - BackHurtbox_MOB(mode=hard)
+        - RArmHurtbox_MOB(mode=hard)
+        - LArmHurtbox_MOB(mode=hard)
+        - LegsHurtbox_MOB(mode=hard)
+        - DELAY 1
+        - HeadHurtbox_MOB(mode=hard)
+        - BodyHurtbox_MOB(mode=hard)
+        - BackHurtbox_MOB(mode=hard)
+        - RArmHurtbox_MOB(mode=hard)
+        - LArmHurtbox_MOB(mode=hard)
+        - LegsHurtbox_MOB(mode=hard)
+        
+HeadHurtbox_MOB: &HurtboxAnchor_MOB
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1.7,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.4
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+BodyHurtbox_MOB:
+    <<: *HurtboxAnchor_MOB
+    relative-offset: "0.2,1,0"
+BackHurtbox_MOB:
+    <<: *HurtboxAnchor_MOB
+    relative-offset: "-0.2,1,0"
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: f23333
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+RArmHurtbox_MOB:
+    <<: *HurtboxAnchor_MOB
+    relative-offset: "0,1,0.4"
+LArmHurtbox_MOB:
+    <<: *HurtboxAnchor_MOB
+    relative-offset: "0,1,-0.4"
+LegsHurtbox_MOB:
+    <<: *HurtboxAnchor_MOB
+    relative-offset: "0,0.3,0"
+            
+ # SPIDERS
+SpiderHitbox:
+    spell-class: ".PassiveSpell"
+    ignore-cancelled: false
+    cast-without-target: true
+    can-trigger: spider
+    triggers:
+        - takedamage
+    spells:
+        - HurtboxActivationMulti_SPIDER(mode=hard)
+HurtboxActivationMulti_SPIDER:
+    spell-class: ".MultiSpell"
+    spells:    
+        - HeadHurtbox_SPIDER(mode=hard)
+        - ThoraxHurtbox_SPIDER(mode=hard)
+        - AbdomenHurtbox_SPIDER(mode=hard)
+        - RLegHurtbox_SPIDER(mode=hard)
+        - LLegHurtbox_SPIDER(mode=hard)
+        - DELAY 1
+        - HeadHurtbox_SPIDER(mode=hard)
+        - ThoraxHurtbox_SPIDER(mode=hard)
+        - AbdomenHurtbox_SPIDER(mode=hard)
+        - RLegHurtbox_SPIDER(mode=hard)
+        - LLegHurtbox_SPIDER(mode=hard)
+        - DELAY 1
+        - HeadHurtbox_SPIDER(mode=hard)
+        - ThoraxHurtbox_SPIDER(mode=hard)
+        - AbdomenHurtbox_SPIDER(mode=hard)
+        - RLegHurtbox_SPIDER(mode=hard)
+        - LLegHurtbox_SPIDER(mode=hard)
+        
+ # Hurtboxes for Mechanism 3
+HeadHurtbox_SPIDER: &HurtboxAnchor_SPIDER
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0.4,0.7,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.4
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+ThoraxHurtbox_SPIDER:
+    <<: *HurtboxAnchor_SPIDER
+    relative-offset: "-0.1,0.7,0"
+AbdomenHurtbox_SPIDER:
+    <<: *HurtboxAnchor_SPIDER
+    relative-offset: "-0.4,0.7,0"
+RLegHurtbox_SPIDER:
+    <<: *HurtboxAnchor_SPIDER
+    relative-offset: "-0.2,0.7,0.5"
+LLegHurtbox_SPIDER:
+    <<: *HurtboxAnchor_SPIDER
+    relative-offset: "-0.2,0.7,-0.5"
+    
+HeadTouch_SPIDER: &TouchAnchor_SPIDER
+    spell-class: ".targeted.AreaEffectSpell"
+    fail-if-no-targets: false
+    can-target: players
+    horizontal-radius: 0.5
+    vertical-radius: 0.5
+    spells:
+        - pain2
+        - HitboxNausea
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3030
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Spider Head"
+        range: 25
+ThoraxTouch_SPIDER:
+    <<: *TouchAnchor_SPIDER
+    spells:
+        - pain1
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3083
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Spider Thorax"
+        range: 25
+AbdomenTouch_SPIDER:
+    <<: *TouchAnchor_SPIDER
+    spells:
+        - pain5
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db3083
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Spider Abdomen"
+        range: 25
+RLegTouch_SPIDER:
+    <<: *TouchAnchor_SPIDER
+    spells:
+        - pain1
+        - HitboxWeakness
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: 4f30db
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Spider Right Leg"
+        range: 25
+LLegTouch_SPIDER:
+    <<: *TouchAnchor_SPIDER
+    spells:
+        - pain1
+    effects:
+      # 1:
+        # position: special
+        # effect: effectlibentity
+        # effectlib:
+            # class: SphereEffect
+            # particle: REDSTONE
+            # iterations: 2
+            # radius: 1.2
+            # particles: 100
+            # color: db9130
+            # period: 1
+            # visibleRange: 625
+      # 2:
+        # position: special
+        # effect: sound
+        # sound: entity.firework_rocket.large_blast
+        # volume: 1
+        # pitch: 1
+      3:
+        position: caster
+        effect: broadcast
+        message: "&bDEBUG: Spider Left Leg"
+        range: 25

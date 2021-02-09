@@ -1,0 +1,130 @@
+ #################
+ # RPGStats Core #
+ #################
+ # Shows off different ways to augment damage or cast spells with the RPGStats Menus config.
+ 
+ # This model for strength is a bit of a workaround.
+ # An easy way to apply strength boosts without messing with meta variables is to highjack melee damage.
+ # Using meta vars means you would probably have to store, remove, and restore players' values upon world switch.
+ # With this, you can just use the world modifier.
+ # If you only have one world, just use meta variables.
+ 
+ # Techncally makes players' melee hitboxes slightly larger.
+ # I think allow-cast-with-fist is bugged?
+StrengthBoost:
+    spell-class: ".instant.BeamSpell"
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes, husks
+    # cast-item: All of the vanilla melee weapons and your custom weapons.
+    max-distance: 4.1
+    relative-offset: "0,1.6,0"
+    hit-radius: 0.2
+    max-targets: 1
+    stop-on-hit-ground: true
+    stop-on-hit-entity: true
+    spell: StrengthPain
+    effects:
+        1:
+          position: target
+          effect: particles
+          particle-name: redstone
+          color: ff0000
+          count: 100
+          speed: 1
+          horiz-spread: 0.1 
+          vert-spread: 0.1
+StrengthPain:
+    spell-class: ".targeted.PainSpell"
+    damage: 1
+    range: 10
+    can-target: monsters, players, animals, invisibles, spiders, slimes, husks
+    ignore-armor: false
+    check-plugins: true
+    modifiers:
+        - variable Strength>10 addpower 1
+        - variable Strength>30 addpower 1
+        - variable Strength>50 addpower 1
+        - variable Strength>70 addpower 1
+        - variable Strength>90 addpower 1
+        - variable Strength=100 addpower 1
+    effects:
+        2:
+          position: target
+          effect: particles
+          particle-name: redstone
+          color: ff0000
+          count: 100
+          speed: 1
+          y-offset: 1
+          horiz-spread: 1 
+          vert-spread: 1
+ 
+ # Dexterity Damage Boost
+ # Should be applied to all bows regardless of name.
+DexterityBoost:
+    spell-class: ".BowSpell"
+    cancel-shot: false
+    use-bow-force: false
+    minimum-force: 0.5
+    cancel-shot-on-fail: false
+    spell-on-hit-entity: DexterityPain
+DexterityPain:
+    spell-class: ".targeted.PainSpell"
+    damage: 1
+    range: 300
+    can-target: monsters, players, animals, invisibles, spiders, slimes, husks
+    ignore-armor: false
+    check-plugins: true
+    modifiers:
+        - variable Dexterity>10 addpower 1
+        - variable Dexterity>30 addpower 1
+        - variable Dexterity>50 addpower 1
+        - variable Dexterity>70 addpower 1
+        - variable Dexterity>90 addpower 1
+        - variable Dexterity=100 addpower 1
+    
+ # Intelligence Damage Boost
+ # Use these pain spells on your mage abilities instead of pain spells specifically made for those abilities. 
+MagicPain1: &MagicPainAnchor
+    spell-class: ".targeted.PainSpell"
+    beneficial: false
+    can-target: players, nonplayers, invisibles, monsters, animals, slimes
+    can-cast-by-command: true
+    helper-spell: true
+    damage: 1
+    modifiers:
+        - variable Intelligence>10 addpower 1
+        - variable Intelligencey>30 addpower 1
+        - variable Intelligence>50 addpower 1
+        - variable Intelligence>70 addpower 1
+        - variable Intelligence>90 addpower 1
+        - variable Intelligence=100 addpower 1
+MagicPain2:
+    <<: *MagicPainAnchor
+    damage: 2
+MagicPain3:
+    <<: *MagicPainAnchor
+    damage: 3
+MagicPain4:
+    <<: *MagicPainAnchor
+    damage: 4
+MagicPain5:
+    <<: *MagicPainAnchor
+    damage: 5
+MagicPain6:
+    <<: *MagicPainAnchor
+    damage: 6
+MagicPain7:
+    <<: *MagicPainAnchor
+    damage: 7
+MagicPain8:
+    <<: *MagicPainAnchor
+    damage: 8
+MagicPain9:
+    <<: *MagicPainAnchor
+    damage: 9
+MagicPain10:
+    <<: *MagicPainAnchor
+    damage: 10
+    modifiers:
+        - variable Intelligence>10 addpower 1 
+    # Add a damage cap with something like this.

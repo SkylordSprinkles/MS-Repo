@@ -1,0 +1,562 @@
+ ##################
+ # RPGSTATS MENUS #
+ ##################
+ # VARIABLES
+variables:
+    # Total Stats
+    # 250 is a very good value, since it allows a player to max out 2 stats while allowing for a "dump stat",
+      # which makes builds a lot more variable among players.
+    StatPoints:
+        type: player
+        permanent: true
+        default: 250
+        min: 0
+        max: 250
+        
+    # RPG style stats  
+    Strength:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+    Intelligence:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+    Dexterity:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+    Endurance:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+    Wisdom:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+    Agility:
+        type: player
+        permanent: true
+        default: 0
+        min: 0
+        max: 100
+          
+ # MAGIC ITEMS
+magic-items:
+    # Icons
+    STRIcon:
+        type: "Iron_Sword"
+        name: "&cStrength"
+        lore:
+          - "&c[&f+&c] &fIncreases melee weapon damage"
+          - "&c[&f+&c] &fIncreases unarmed damage"
+        hide-tooltip: true
+    INTIcon:
+        type: "Blaze_Rod"
+        name: "&9Intelligence"
+        lore:
+          - "&9[&f+&9] &fIncreases mage weapon damage"
+          - "&9[&f+&9] &fIncreases scroll damage"
+        hide-tooltip: true
+    DEXIcon:
+        type: "Bow"
+        name: "&aDexterity"
+        lore:
+          - "&a[&f+&a] &fIncreases ranged weapon damage"
+          - "&a[&f+&a] &fIncreases sidearm damage"
+        hide-tooltip: true
+    ENDIcon:
+        type: "Chainmail_Chestplate"
+        name: "&dEndurance"
+        lore:
+          - "&d[&f+&d] &fIncreases base maximum health"
+          - "&d[&f+&d] &fIncreases block chance"
+        hide-tooltip: true
+    WISIcon:
+        type: "Book"
+        name: "&bWisdom"
+        lore:
+          - "&b[&f+&b] &fIncreases base maximum mana"
+          - "&b[&f+&b] &fIncreases parry chance"
+        hide-tooltip: true
+    AGIIcon:
+        type: "Feather"
+        name: "&eAgility"
+        lore:
+          - "&e[&f+&e] &fIncreases base movement speed"
+          - "&e[&f+&e] &fIncreases dodge chance"
+        hide-tooltip: true
+    ResetIcon:
+        type: "Barrier"
+        name: "&fReset All Stats"
+        hide-tooltip: true
+    BackIcon:
+        type: "Arrow"
+        name: "&fBack"
+        hide-tooltip: true
+    ExitIcon:
+        type: "Barrier"
+        name: "&fExit"
+        hide-tooltip: true
+    
+    # Buttons
+    Yes:
+        type: "green_stained_glass_pane"
+        name: "&fYes"
+        hide-tooltip: true
+    No:
+        type: "red_stained_glass_pane"
+        name: "&fNo"
+        hide-tooltip: true
+    
+    Plus5:
+        type: "green_stained_glass_pane"
+        name: "&f+5"
+        hide-tooltip: true
+    Minus5:
+        type: "red_stained_glass_pane"
+        name: "&f-5"
+        hide-tooltip: true
+        
+    # Stat Token
+    StatToken:
+        type: "Sunflower"
+        name: "&fStat Token"
+        lore:
+          - ""
+          - "&7You've made a lot of progress."
+          - "&7Use stat tokens to distributable stat points."
+        hide-tooltip: true   
+        
+ # MAIN MENU 1
+ # Freely distributable stats. 
+RPGStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "My Stats"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        strength:
+            slot: 10 
+            item: STRIcon
+            quantity: 1
+            stay-open: false
+            spell: STRStatsMenu
+            spell-right: STRStatsMenu
+        option2:
+            slot: 11
+            item: INTIcon
+            quantity: 1
+            stay-open: false 
+            spell: INTStatsMenu
+            spell-right: INTStatsMenu
+        option3:
+            slot: 12
+            item: DEXIcon
+            quantity: 1
+            stay-open: false 
+            spell: DEXStatsMenu
+            spell-right: DEXStatsMenu
+        option4:
+            slot: 13
+            item: ENDIcon
+            quantity: 1
+            stay-open: false 
+            spell: ENDStatsMenu
+            spell-right: ENDStatsMenu
+        option5:
+            slot: 14
+            item: WISIcon
+            quantity: 1
+            stay-open: false 
+            spell: WISStatsMenu
+            spell-right: WISStatsMenu
+        option6:
+            slot: 15
+            item: AGIIcon
+            quantity: 1
+            stay-open: false 
+            spell: AGIStatsMenu
+            spell-right: AGIStatsMenu
+        option7:
+            slot: 16
+            item: ResetIcon
+            quantity: 1
+            stay-open: true
+            spell: ResetAllStats(mode=hard)
+            spell-right: ResetAllStats(mode=hard)
+
+ # STAT MENUS
+ # Strength
+STRStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Strength"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: STRMinus5(mode=hard)
+            spell-right: STRMinus5(mode=hard)
+        STRIcon:
+            slot: 13
+            item: STRIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: STRPlus5(mode=hard)
+            spell-right: STRPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+STRMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Strength -5
+        - StatPoints +5
+    modifiers:
+        - variable Strength=0 denied
+        - variable StatPoints=250
+    str-cast-self: "&cStrength: &f%var:Strength:0% &7Total: &f%var:StatPoints:0%"   
+STRPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Strength +5
+        - StatPoints -5
+    modifiers:
+        - variable Strength=100 denied
+        - variable StatPoints=0
+    str-cast-self: "&cStrength: &f%var:Strength:0% &7Total: &f%var:StatPoints:0%"
+    
+ # Intelligence
+INTStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Intelligence"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: INTMinus5(mode=hard)
+            spell-right: STRMinus5(mode=hard)
+        INTIcon:
+            slot: 13
+            item: INTIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: INTPlus5(mode=hard)
+            spell-right: STRPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+INTMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Intelligence -5
+        - StatPoints +5
+    modifiers:
+        - variable Intelligence=0 denied
+        - variable StatPoints=250 denied
+    str-cast-self: "&9Intelligence: &f%var:Intelligence:0% &7Total: &f%var:StatPoints:0%"   
+INTPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Intelligence +5
+        - StatPoints -5
+    modifiers:
+        - variable Intelligence=100 denied
+        - variable StatPoints=0 denied
+    str-cast-self: "&9Intelligence: &f%var:Intelligence:0% &7Total: &f%var:StatPoints:0%"
+    
+ # Dexterity
+DEXStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Dexterity"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: DEXMinus5(mode=hard)
+            spell-right: DEXMinus5(mode=hard)
+        DEXIcon:
+            slot: 13
+            item: DEXIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: DEXPlus5(mode=hard)
+            spell-right: DEXPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+DEXMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Dexterity -5
+        - StatPoints +5
+    modifiers:
+        - variable Dexterity=0 denied
+        - variable StatPoints=250 denied
+    str-cast-self: "&aDexterity: &f%var:Dexterity:0% &7Total: &f%var:StatPoints:0%"   
+DEXPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Dexterity +5
+        - StatPoints -5
+    modifiers:
+        - variable Dexterity=100 denied
+        - variable StatPoints=0 denied
+    str-cast-self: "&aDexterity: &f%var:Dexterity:0% &7Total: &f%var:StatPoints:0%"
+    
+ # Endurance
+ENDStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Endurance"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: ENDMinus5(mode=hard)
+            spell-right: ENDMinus5(mode=hard)
+        ENDIcon:
+            slot: 13
+            item: ENDIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: ENDPlus5(mode=hard)
+            spell-right: ENDPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+ENDMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Endurance -5
+        - StatPoints +5
+    modifiers:
+        - variable Endurance=0 denied
+        - variable StatPoints=250 denied
+    str-cast-self: "&dEndurance: &f%var:Endurance:0% &7Total: &f%var:StatPoints:0%"   
+ENDPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Endurance +5
+        - StatPoints -5
+    modifiers:
+        - variable Endurance=100 denied
+        - variable StatPoints=0 denied
+    str-cast-self: "&dEndurance: &f%var:Endurance:0% &7Total: &f%var:StatPoints:0%"
+    
+ # Wisdom
+WISStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Wisdom"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: WISMinus5(mode=hard)
+            spell-right: WISMinus5(mode=hard)
+        WISIcon:
+            slot: 13
+            item: WISIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: WISPlus5(mode=hard)
+            spell-right: WISPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+WISMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Wisdom -5
+        - StatPoints +5
+    modifiers:
+        - variable Wisdom=0 denied
+        - variable StatPoints=250 denied
+    str-cast-self: "&bWisdom: &f%var:Wisdom:0% &7Total: &f%var:StatPoints:0%"   
+WISPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Wisdom +5
+        - StatPoints -5
+    modifiers:
+        - variable Wisdom=100 denied
+        - variable StatPoints=0 denied
+    str-cast-self: "&bWisdom: &f%var:Wisdom:0% &7Total: &f%var:StatPoints:0%"
+    
+ # Agility
+AGIStatsMenu:
+    spell-class: ".MenuSpell"
+    title: "Modify Agility"
+    require-entity-target: false
+    stay-open-non-option: true
+    min-rows: 3
+    filler: gray_stained_glass_pane{name:" "}
+    delay: 1
+    options: 
+        Minus5:
+            slot: 12
+            item: Minus5
+            quantity: 1
+            stay-open: true
+            spell: AGIMinus5(mode=hard)
+            spell-right: AGIMinus5(mode=hard)
+        AGIIcon:
+            slot: 13
+            item: AGIIcon
+            quantity: 1
+            stay-open: true
+            spell: none
+            spell-right: none
+        Plus5:
+            slot: 14
+            item: Plus5
+            quantity: 1
+            stay-open: true
+            spell: AGIPlus5(mode=hard)
+            spell-right: AGIPlus5(mode=hard)
+        BackIcon:
+            slot: 22
+            item: BackIcon
+            quantity: 1
+            stay-open: false
+            spell: RPGStatsMenu
+            spell-right: RPGStatsMenu
+ 
+AGIMinus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Agility -5
+        - StatPoints +5
+    modifiers:
+        - variable Agility=0 denied
+        - variable StatPoints=250 denied
+    str-cast-self: "&eAgility: &f%var:Agility:0% &7Total: &f%var:StatPoints:0%"   
+AGIPlus5:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Agility +5
+        - StatPoints -5
+    modifiers:
+        - variable Agility=100 denied
+        - variable StatPoints=0 denied
+    str-cast-self: "&eAgility: &f%var:Agility:0% &7Total: &f%var:StatPoints:0%"
+ 
+ # Individual Spell
+ResetAllStats:
+    spell-class: ".instant.DummySpell"         
+    variable-mods-cast: 
+        - Strength =0
+        - Intelligence =0
+        - Dexterity =0
+        - Endurance =0
+        - Wisdom =0
+        - Agility =0
+        - StatPoints =250
+    str-cast-self: "&7Stats Reset!"

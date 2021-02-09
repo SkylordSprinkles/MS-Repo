@@ -1,0 +1,82 @@
+ ##################################
+ # STEALTH AND PICKPOCKETING v0.0 #
+ ##################################
+ # Notes:
+  # Very much a WIP.
+ 
+ # Variables
+ # Pickpocketing ICONS Magic Items
+magic-items:
+    RottenFleshIcon:
+        type: "rotten_flesh"
+        name: "&ePickpocket &fRotten Flesh&e?"
+        lore:
+          - "&eChance: &aHigh"
+    RottenEyeIcon:
+        type: "spider_eye"
+        name: "&ePickpocket &fRotten Eye&e?"
+        lore:
+          - "&eChance: &cLow"
+    rngArrow:
+        type: "arrow"
+        name: "&7Reinforced Arrows"
+ 
+ # Pickpocketing REWARDS Magic Items
+    RottenEye:
+        type: "spider_eye"
+        name: "&fRotten Eye"
+ 
+ # Pickpocket Menus/UIs
+ZombiePickpocketPassive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - rightclickentity ZOMBIE
+    modifiers:
+        - sneaking required
+        # - buffactive whateverthestealthbuffis required
+    spells:
+        - ZombiePickpocket1
+ZombiePickpocket1:
+    spell-class: ".MenuSpell"
+    title: "Pickpocketing Zombie"
+    require-entity-target: false
+    stay-open-non-option: true
+    options: 
+        option1:
+            slot: 0 
+            item: RottenFleshIcon
+            quantity: 1
+            stay-open: false
+            spell: ConjureRottenFlesh
+            spell-right: ConjureRottenFlesh
+        option2:
+            slot: 1
+            item: RottenEyeIcon
+            quantity: 1
+            stay-open: false 
+            spell: ConjureSpiderEye
+            spell-right: ConjureSpiderEye
+ 
+ # Conjure Spells (Rewards for a successful pickpocket) 
+ConjureRottenFlesh:
+    spell-class: ".instant.ConjureSpell"
+    add-to-inventory: true
+    drop-if-inventory-full: true
+    power-affects-quantity: false
+    power-affects-chance: false
+    calculate-drops-individually: true
+    auto-equip: false
+    items:
+        - rotten_flesh 1 100%
+    str-cast-self: "&eSuccessfully pickpocketed &fRotten Flesh&e!"
+ConjureSpiderEye:
+    spell-class: ".instant.ConjureSpell"
+    add-to-inventory: true
+    drop-if-inventory-full: true
+    power-affects-quantity: false
+    power-affects-chance: false
+    calculate-drops-individually: true
+    auto-equip: false
+    items:
+        - RottenEye 1 100%
+    str-cast-self: "&eSuccessfully pickpocketed &fRotten Eye&e!"

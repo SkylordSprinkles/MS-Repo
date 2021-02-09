@@ -1,0 +1,563 @@
+ ##############################
+ # Dance Casting Reroute v1.0 #
+ ##############################
+ # Notes:
+  # A "remake" of dance casting using particle projectiles.
+  # Better targetting and accuracy WIP.
+ 
+ # Variables
+variables:
+    DanceDuration:
+        type: player
+        default: 0
+        min: 0
+        max: 5
+        permanent: false
+    Input1:
+        type: player
+        default: 0
+        min: 0
+        max: 4
+        permanent: false
+    Input2:
+        type: player
+        default: 0
+        min: 0
+        max: 4
+        permanent: false
+    Input3:
+        type: player
+        default: 0
+        min: 0
+        max: 4
+        permanent: false
+    Input4:
+        type: player
+        default: 0
+        min: 0
+        max: 4
+        permanent: false
+        
+ # Modifiers
+modifiers:
+    WASD:
+        checks:
+            - variable Input1=1 continue
+            - variable Input2=2 continue
+            - variable Input3=3 continue
+            - variable Input4=4 continue
+        pass-condition: ALL
+ 
+ # Dancing Mechanism
+DanceCastingStart:
+    spell-class: ".MultiSpell"
+    variable-mods-cast:
+        - DanceDuration =1
+        - Input1 =0
+        - Input2 =0
+        - Input3 =0
+        - Input4 =0
+    spells:
+        - DanceCastingBuff(mode=hard)
+        - DELAY 1
+        - DanceCastingMechanism(mode=hard)
+DanceCastingBuff:
+    spell-class: ".buff.DummySpell"
+    duration: 0
+DanceCastingMechanism:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - buffactive DanceCastingBuff required
+    spells:
+        - WHitbox1(mode=hard)
+        - AHitbox1(mode=hard)
+        - SHitbox1(mode=hard)
+        - DHitbox1(mode=hard)
+        - DELAY 10
+        - DanceCastingMechanism(mode=hard)
+ 
+ # Dancing Input 1
+WHitbox1: &WHitboxAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "1,1,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    change-pitch: false
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: true
+    hit-ground: false
+    hit-self: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    spell: WHitboxConfirm1(mode=hard)
+    modifiers:
+        - variable DanceDuration=2 castinstead WHitbox2
+        - variable DanceDuration=3 castinstead WHitbox3
+        - variable DanceDuration=4 castinstead WHitbox4
+        - variable DanceDuration=5 castinstead DanceCastingResolution
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            speed: 0
+            count: 1
+WHitboxConfirm1: &WHitboxConfirmAnchor
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    variable-mods-cast:
+        - DanceDuration =2
+        - Input1 =1
+    str-cast-self: "Input 1: W"
+    # str-cast-self: "Self Success!"
+    # str-cast-target: "Target Success!"
+ 
+AHitbox1: &AHitboxAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1,-1"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    change-pitch: false
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: true
+    hit-ground: false
+    hit-self: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    spell: AHitboxConfirm1(mode=hard)
+    modifiers:
+        - variable DanceDuration=2 castinstead AHitbox2
+        - variable DanceDuration=3 castinstead AHitbox3
+        - variable DanceDuration=4 castinstead AHitbox4
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+AHitboxConfirm1: &AHitboxConfirmAnchor
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    variable-mods-cast:
+        - DanceDuration =2
+        - Input1 =2
+    str-cast-self: "Input 1: A"
+    # str-cast-self: "Self Success!"
+    # str-cast-target: "Target Success!"
+    
+SHitbox1: &SHitboxAnchor 
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "-1,1,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    change-pitch: false
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: true
+    hit-ground: false
+    hit-self: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    spell: SHitboxConfirm1(mode=hard)
+    modifiers:
+        - variable DanceDuration=2 castinstead SHitbox2
+        - variable DanceDuration=3 castinstead SHitbox3
+        - variable DanceDuration=4 castinstead SHitbox4
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+SHitboxConfirm1: &SHitboxConfirmAnchor
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    variable-mods-cast:
+        - DanceDuration =2
+        - Input1 =3
+    str-cast-self: "Input 1: S"
+    # str-cast-self: "Self Success!"
+    # str-cast-target: "Target Success!"
+
+DHitbox1: &DHitboxAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1,1"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    change-pitch: false
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: true
+    hit-ground: false
+    hit-self: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    spell: SHitboxConfirm1(mode=hard)
+    modifiers:
+        - variable DanceDuration=2 castinstead DHitbox2
+        - variable DanceDuration=3 castinstead DHitbox3
+        - variable DanceDuration=4 castinstead DHitbox4
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+DHitboxConfirm1: &DHitboxConfirmAnchor
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    variable-mods-cast:
+        - DanceDuration =2
+        - Input1 =4
+    str-cast-self: "Input 1: D"
+    # str-cast-self: "Self Success!"
+    # str-cast-target: "Target Success!"
+  
+RemoveProjectilesPassive1:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WHitboxConfirm1
+        - spellcasted AHitboxConfirm1
+        - spellcasted SHitboxConfirm1
+        - spellcasted DHitboxConfirm1
+    spells:
+        - RemoveProjectiles1(mode=hard)  
+RemoveProjectiles1:
+    spell-class: ".targeted.ProjectileModifySpell"
+    horizontal-radius: 3
+    vertical-radius: 1.5
+    point-blank: true
+    claim-projectiles: true
+    max-duration: 0.1
+    spells: 
+        - WHitbox1
+        - AHitbox1
+        - SHitbox1
+        - DHitbox1  
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.experience_orb.pickup
+          volume: 0.6
+          pitch: 1
+    
+ # Dancing Input 2
+WHitbox2:
+    <<: *WHitboxAnchor
+    spell: WHitboxConfirm2(mode=hard)
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: ff0000
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            speed: 0
+            count: 1
+WHitboxConfirm2:
+    <<: *WHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =3
+        - Input2 =1
+    str-cast-self: "Input 2: W"
+        
+AHitbox2:
+    <<: *AHitboxAnchor
+    spell: AHitboxConfirm2(mode=hard)
+AHitboxConfirm2:
+    <<: *AHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =3
+        - Input2 =2
+    str-cast-self: "Input 2: A"
+        
+SHitbox2:
+    <<: *SHitboxAnchor
+    spell: SHitboxConfirm2(mode=hard)
+SHitboxConfirm2:
+    <<: *SHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =3
+        - Input2 =3
+    str-cast-self: "Input 2: S"
+        
+DHitbox2:
+    <<: *DHitboxAnchor
+    spell: DHitboxConfirm2(mode=hard)
+DHitboxConfirm2:
+    <<: *DHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =3
+        - Input2 =4
+    str-cast-self: "Input 2: D"
+ 
+RemoveProjectilesPassive2:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WHitboxConfirm2
+        - spellcasted AHitboxConfirm2
+        - spellcasted SHitboxConfirm2
+        - spellcasted DHitboxConfirm2
+    spells:
+        - RemoveProjectiles2(mode=hard)  
+RemoveProjectiles2:
+    spell-class: ".targeted.ProjectileModifySpell"
+    horizontal-radius: 3
+    vertical-radius: 1.5
+    point-blank: true
+    claim-projectiles: true
+    max-duration: 0.1
+    spells: 
+        - WHitbox2
+        - AHitbox2
+        - SHitbox2
+        - DHitbox2
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.experience_orb.pickup
+          volume: 0.6
+          pitch: 1
+        
+ # Dancing Input 3
+WHitbox3:
+    <<: *WHitboxAnchor
+    spell: WHitboxConfirm3(mode=hard)
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00ff00
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            speed: 0
+            count: 1
+WHitboxConfirm3:
+    <<: *WHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =4
+        - Input3 =1
+    str-cast-self: "Input 3: W"
+        
+AHitbox3:
+    <<: *AHitboxAnchor
+    spell: AHitboxConfirm3(mode=hard)
+AHitboxConfirm3:
+    <<: *AHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =4
+        - Input3 =2
+    str-cast-self: "Input 3: A"
+        
+SHitbox3:
+    <<: *SHitboxAnchor
+    spell: SHitboxConfirm3(mode=hard)
+SHitboxConfirm3:
+    <<: *SHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =4
+        - Input3 =3
+    str-cast-self: "Input 3: S"
+        
+DHitbox3:
+    <<: *DHitboxAnchor
+    spell: DHitboxConfirm3(mode=hard)
+DHitboxConfirm3:
+    <<: *DHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =4
+        - Input3 =4
+    str-cast-self: "Input 3: D"
+    
+RemoveProjectilesPassive3:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WHitboxConfirm3
+        - spellcasted AHitboxConfirm3
+        - spellcasted SHitboxConfirm3
+        - spellcasted DHitboxConfirm3
+    spells:
+        - RemoveProjectiles3(mode=hard) 
+RemoveProjectiles3:
+    spell-class: ".targeted.ProjectileModifySpell"
+    horizontal-radius: 3
+    vertical-radius: 1.5
+    point-blank: true
+    claim-projectiles: true
+    max-duration: 0.1
+    spells: 
+        - WHitbox3
+        - AHitbox3
+        - SHitbox3
+        - DHitbox3
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.experience_orb.pickup
+          volume: 0.6
+          pitch: 1
+        
+ # Dancing Input 4
+WHitbox4:
+    <<: *WHitboxAnchor
+    spell: WHitboxConfirm4(mode=hard)
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 0000ff
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            speed: 0
+            count: 1
+WHitboxConfirm4:
+    <<: *WHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =5
+        - Input4 =1
+    str-cast-self: "Input 4: W"
+        
+AHitbox4:
+    <<: *AHitboxAnchor
+    spell: AHitboxConfirm4(mode=hard)
+AHitboxConfirm4:
+    <<: *AHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =5
+        - Input4 =2
+    str-cast-self: "Input 4: A"
+        
+SHitbox4:
+    <<: *SHitboxAnchor
+    spell: SHitboxConfirm4(mode=hard)
+SHitboxConfirm4:
+    <<: *SHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =5
+        - Input4 =3
+    str-cast-self: "Input 4: S"
+        
+DHitbox4:
+    <<: *DHitboxAnchor
+    spell: DHitboxConfirm4(mode=hard)
+DHitboxConfirm4:
+    <<: *DHitboxConfirmAnchor
+    variable-mods-cast:
+        - DanceDuration =5
+        - Input4 =4
+    str-cast-self: "Input 4: D"
+  
+RemoveProjectilesPassive4:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted WHitboxConfirm4
+        - spellcasted AHitboxConfirm4
+        - spellcasted SHitboxConfirm4
+        - spellcasted DHitboxConfirm4
+    spells:
+        - RemoveProjectiles4(mode=hard)   
+RemoveProjectiles4:
+    spell-class: ".targeted.ProjectileModifySpell"
+    horizontal-radius: 3
+    vertical-radius: 1.5
+    point-blank: true
+    claim-projectiles: true
+    max-duration: 0.1
+    spells: 
+        - WHitbox4
+        - AHitbox4
+        - SHitbox4
+        - DHitbox4
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.experience_orb.pickup
+          volume: 0.6
+          pitch: 1
+        
+ # Dance Casting Resolution
+DanceCastingResolution:
+    spell-class: ".targeted.CleanseSpell"
+    target-self: true
+    remove:
+        - buff:DanceCastingBuff
+    modifiers:
+        - collection WASD castinstead WASDResolution
+    str-cast-self: "No Dance Cast Sequence Found."
+WASDResolution:
+    spell-class: ".targeted.CleanseSpell"
+    target-self: true
+    remove:
+        - buff:DanceCastingBuff
+    modifiers:
+        - variable Input1=1 required
+        - variable Input2=2 required
+        - variable Input3=3 required
+        - variable Input4=4 required
+    str-cast-self: "Dance Casting Sequence: 'WASD' Found."
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.player.levelup
+          volume: 0.6
+          pitch: 1

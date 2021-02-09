@@ -1,0 +1,305 @@
+ # Notes:
+   # Features:
+    # Tap & Sustained Fire
+    # Action Bar Text Ammo Count
+    # Gun Recoil
+    # Reloading 
+    # Movement Pack Compatability
+
+magic-items:
+    gunAutoRifle:
+        type: "iron_horse_armor"
+        name: "&fAutomatic Rifle"
+    magAutoRifle:
+        type: "iron_ingot"
+        name: "&fAutomatic Rifle Ammo"
+
+variables:
+    AutoRifle_Ammo:
+        type: player
+        default: 30
+        min: 0
+        max: 30
+        permanent: false
+    AutoRifle_ShotsFired:
+        type: player
+        default: 0
+        min: 0
+        max: 10
+        permanent: false
+
+ # Automatic Rifle
+AutomaticRifleTapfire:
+    spell-class: ".MultiSpell"
+    right-click-cast-item: gunAutoRifle
+    spells:
+        - AutoRifleBuff
+        - AutoRifleProjectile(mode=hard)
+    modifiers:
+        - variable AutoRifle_Ammo=0 castinstead ReloadMessage
+        - variable AutoRifle_ShotsFired>0 castinstead AutomaticRifleSustained
+        - buffactive ReloadingBuff denied
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.firework_rocket.blast
+          volume: 0.6
+          pitch: 0.5
+AutomaticRifleSustained:
+    spell-class: ".MultiSpell"
+    right-click-cast-item: stone_sword
+    spells:
+        - AutoRifleBuff
+        - AutoRifleProjectile(mode=hard)
+        - DELAY 3
+        - AutoRifleProjectile(mode=hard)
+        - DELAY 3
+        - AutoRifleProjectile(mode=hard)
+        - DELAY 3
+        - AutoRifleProjectile(mode=hard)
+    modifiers:
+        - variable AutoRifle_Ammo=0 castinstead ReloadMessage
+        - buffactive ReloadingBuff denied
+    effects:
+        1:
+          position: caster
+          effect: sound
+          sound: entity.firework_rocket.blast
+          volume: 0.6
+          pitch: 0.5
+        2:
+          position: caster
+          effect: sound
+          sound: entity.firework_rocket.blast
+          volume: 0.6
+          pitch: 0.5
+          delay: 3
+        3:
+          position: caster
+          effect: sound
+          sound: entity.firework_rocket.blast
+          volume: 0.6
+          pitch: 0.5
+          delay: 6
+        4:
+          position: caster
+          effect: sound
+          sound: entity.firework_rocket.blast
+          volume: 0.6
+          pitch: 0.5
+          delay: 9
+AutoRifleBuff:
+    spell-class: ".buff.DummySpell"
+    duration: 0.7
+    toggle: false
+    spell-on-end: RecoilReset
+  
+ # Automatic Rifle Projectiles
+AutoRifleProjectile:
+    spell-class: ".instant.ProjectileSpell"
+    cooldown: 0
+    str-on-cooldown: ""
+    relative-offset: "0,1.6,0"
+    projectile-type: snowball
+    range: 100
+    velocity: 4
+    hit-radius: 0.5
+    require-hit-entity: true
+    cancel-damage: true
+    verticle-spread: 0.15
+    horizontal-spread: 0.15
+    spell: pain5
+    modifiers:
+        - sneaking castinstead AutoRifleProjectile_Sneaking
+        # - buffactive ForceCrawlDummy castinstead AutoRifleProjectile_Sneaking # For use with Sky's Movement Pack
+        - sprinting castinstead AutoRifleProjectile_Sprinting
+        - variable AutoRifle_Ammo=0 castinstead ReloadMessage1
+        - variable AutoRifle_ShotsFired>9 cast RecoilMulti
+    variable-mods-cast:
+        - AutoRifle_Ammo -1
+        - AutoRifle_ShotsFired +1
+AutoRifleProjectile_Sneaking:
+    spell-class: ".instant.ProjectileSpell"
+    cooldown: 0
+    str-on-cooldown: ""
+    relative-offset: "0,1.6,0"
+    projectile-type: snowball
+    range: 100
+    velocity: 4
+    hit-radius: 0.5
+    require-hit-entity: true
+    cancel-damage: true
+    verticle-spread: 0
+    horizontal-spread: 0
+    spell: pain5
+    modifiers:
+        - variable AutoRifle_Ammo=0 castinstead ReloadMessage1
+    variable-mods-cast:
+        - AutoRifle_Ammo -1
+        - AutoRifle_ShotsFired +1
+AutoRifleProjectile_Sprinting:
+    spell-class: ".instant.ProjectileSpell"
+    cooldown: 0
+    str-on-cooldown: ""
+    relative-offset: "0,1.6,0"
+    projectile-type: snowball
+    range: 100
+    velocity: 4
+    hit-radius: 0.5
+    require-hit-entity: true
+    cancel-damage: true
+    verticle-spread: 0.3
+    horizontal-spread: 0.3
+    spell: pain5
+    modifiers:
+        - sneaking denied
+        - variable AutoRifle_Ammo=0 castinstead ReloadMessage1
+    variable-mods-cast:
+        - AutoRifle_Ammo -1
+        - AutoRifle_ShotsFired +1
+
+AutoRifleAmmoCount:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted AutoRifleProjectile
+        - spellcasted AutoRifleProjectile_Sneaking
+        - spellcasted AutoRifleProjectile_Sprinting
+    spells:
+        - AutoRifleAmmoCount_Effect(mode=hard) 
+AutoRifleAmmoCount_Effect:
+    spell-class: ".instant.DummySpell"     
+    effects:
+        1:
+          position: caster
+          effect: actionbartext
+          message: "&e[&f%var:AutoRifle_Ammo:0%&e/&f30&e]"
+          broadcast: false
+   
+ # Recoil
+RecoilMulti:
+    spell-class: ".MultiSpell"
+    modifiers:
+        - onground required
+        # - sneaking denied
+        - sprinting denied
+    spells:
+        - Recoil
+        - DELAY 1  
+        - Recoil  
+        - DELAY 1  
+        - Recoil      
+Recoil:
+    spell-class: ".instant.DummySpell"
+    variable-mods-cast:
+        - meta_location_pitch -0.5
+        
+RecoilReset:
+    spell-class: ".instant.DummySpell"
+    variable-mods-cast:
+        - AutoRifle_ShotsFired =0
+        
+ # Reload
+ReloadMessage1:
+    spell-class: ".instant.DummySpell"
+    effects:
+        1:
+          position: caster
+          effect: actionbartext
+          message: "&eReload!"
+          broadcast: false
+        # 2:
+          # position: caster
+          # effect: soundpersonal
+          # sound: entity.chicken.step
+          # volume: 3
+          # pitch: 1
+ReloadMessage2:
+    spell-class: ".instant.DummySpell"
+    effects:
+        1:
+          position: caster
+          effect: actionbartext
+          message: "&eReloading..."
+          broadcast: false
+        2:
+          position: caster
+          effect: soundpersonal
+          sound: entity.chicken.step
+          volume: 1.7
+          pitch: 1
+
+AutoRifleReload_Passive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - offhandswap
+    cancel-default-action: true
+    modifiers:
+        - holdingprecise gunAutoRifle required
+        - buffactive ReloadingBuff denied
+    spells:
+        - AutoRifleReload_Multi(mode=hard)
+AutoRifleReload_Multi:
+    spell-class: ".MultiSpell"
+    spells:
+        - ReloadingBuff(mode=hard)
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - ReloadMessage2(mode=hard)
+        - DELAY 1
+        - AutoRifleReloadVar
+ReloadingBuff:
+    spell-class: ".buff.DummySpell"
+    duration: 1
+AutoRifleReloadVar:
+    spell-class: ".instant.DummySpell"
+    variable-mods-cast:
+        - AutoRifle_Ammo =30
+    effects:
+        1:
+          position: caster
+          effect: actionbartext
+          message: "&fReloaded!"
+          broadcast: false
+        2:
+          position: caster
+          effect: soundpersonal
+          sound: entity.chicken.step
+          volume: 3
+          pitch: 1       

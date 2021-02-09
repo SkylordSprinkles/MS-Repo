@@ -1,0 +1,183 @@
+ #####################
+ # Game of Life v0.0 #
+ #####################
+ # Notes:
+  # A recreation of Conway's Game of Life.
+  # The logic is NOT intact in this version; just thought it would be cool to share early.
+  
+CellPlacer:
+    spell-class: ".targeted.PulserSpell"
+    block-type: black_stained_glass
+    interval: 20
+    total-pulses: 2
+    cooldown: 0
+    cap-per-player: 100
+    max-distance: 200
+    range: 4
+    unbreakable: false
+    only-count-on-success: true
+    spells: none
+    spell-on-break: AliveCell
+AliveCell:
+    spell-class: ".targeted.PulserSpell"
+    block-type: black_concrete
+    interval: 20
+    total-pulses: 2
+    cooldown: 0
+    cap-per-player: 10
+    max-distance: 200
+    range: 4
+    unbreakable: false
+    spells:
+        - AliveCellOffsetLocationORIGIN
+        - AliveCellOffsetLocationNORTH
+        - AliveCellOffsetLocationSOUTH
+        - AliveCellOffsetLocationEAST
+        - AliveCellOffsetLocationWEST
+        - AliveCellOffsetLocationNORTHEAST
+        - AliveCellOffsetLocationNORTHWEST
+        - AliveCellOffsetLocationSOUTHEAST
+        - AliveCellOffsetLocationSOUTHWEST
+
+AliveCellOffsetLocationORIGIN:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 0,0.75,0
+    spell: AliveCellPartProj
+AliveCellOffsetLocationNORTH:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 1,0.75,0
+    spell: AliveCellPartProj
+AliveCellOffsetLocationSOUTH:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: -1,0.75,0
+    spell: AliveCellPartProj
+AliveCellOffsetLocationEAST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 0,0.75,1
+    spell: AliveCellPartProj
+AliveCellOffsetLocationWEST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 0,0.75,-1
+    spell: AliveCellPartProj
+AliveCellOffsetLocationNORTHEAST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 1,0.75,1
+    spell: AliveCellPartProj
+AliveCellOffsetLocationNORTHWEST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 1,0.75,-1
+    spell: AliveCellPartProj
+AliveCellOffsetLocationSOUTHEAST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: -1,0.75,1
+    spell: AliveCellPartProj
+AliveCellOffsetLocationSOUTHWEST:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: -1,0.75,-1
+    spell: AliveCellPartProj
+
+AliveCellPartProj:
+    spell-class: ".instant.ParticleProjectileSpell"
+    change-pitch: false
+    relative-offset: "0,0,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    interactions: 
+        - AliveCellPartProj AliveCellPartProjRED
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: 00bfff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+     
+AliveCellPartProjRED:
+    spell-class: ".instant.ParticleProjectileSpell"
+    change-pitch: false
+    relative-offset: "0,0.5,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: false
+    hit-ground: false
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    interactions: 
+        - AliveCellPartProj AliveCellPartProjWHITE
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: ff0000
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+AliveCellPartProjWHITE:
+    spell-class: ".instant.ParticleProjectileSpell"
+    change-pitch: false
+    relative-offset: "0,0.5,0"
+    str-on-cooldown: ""
+    projectile-velocity: 0.0001
+    projectile-gravity: 0
+    projectile-spread: 0
+    particle-speed: 0.01
+    tick-interval: 1
+    hug-surface: false
+    special-effect-interval: 1
+    spell-interval: 1
+    max-duration: 0.5
+    hit-radius: 0.5
+    hit-players: false
+    hit-ground: false
+    hit-air-after-duration: true
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    spell: nonetargeted
+    spell-on-duration-end: AliveCellOffsetLocationREPLACE
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: ffffff
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1
+           
+AliveCellOffsetLocationREPLACE:
+    spell-class: ".targeted.OffsetLocationSpell"
+    absolute-offset: 0,-2,0
+    spell: AliveCell

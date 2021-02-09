@@ -1,0 +1,422 @@
+ #######################
+ # Mirror Puzzles v1.0 #
+ #######################
+magic-items:
+    skyMirror:
+        type: "blaze_rod"
+        name: "&5Mirror Wand"
+    skyLight:
+        type: "nether_star"
+        name: "&5Flashlight"
+
+BeaconBlast:
+    spell-class: ".instant.ParticleProjectileSpell"
+    cast-item: skyLight
+    name: "Beacon Blast"
+    cooldown: 1
+    str-on-cooldown: ""
+    can-cast-by-command: true
+    projectile-velocity: 35
+    projectile-gravity: -0.01
+    projectile-spread: 0.01
+    particle-speed: 0.01
+    relative-offset: 0,1,0
+    tick-interval: 1
+    hug-surface: false
+    can-target: monsters,players,invisibles
+    special-effect-interval: 1
+    spell-interval: 1
+    max-distance: 30 
+    hit-radius: 1.2
+    hit-players: true
+    hit-ground: true
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    spell: pain1
+    relative-offset: "0,1.6,0"
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.1
+            vert-spread: 0.1
+            size: 1
+            count: 5
+           2:
+            position: target
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.3
+            vert-spread: 0.3
+            size: 1
+            height-offset: 1
+            count: 100
+            speed: 1
+           3:
+            position: special
+            effect: particles
+            particle-name: dolphin
+            horiz-spread: 0
+            vert-spread: 0
+            count: 5
+           4:
+            position: special
+            effect: effectlib
+            effectlib:
+                class: SphereEffect
+                particle: BUBBLE_POP
+                iterations: 1
+                radius: 0
+                particles: 1
+                period: 1
+                visibleRange: 625
+           5:
+            position: caster
+            effect: sound
+            sound: entity.puffer_fish.blow_out
+            volume: 1
+            pitch: 2
+           6:
+            position: target
+            effect: sound
+            sound: entity.firework_rocket.blast_far
+            volume: 2
+            pitch: 1.45
+
+PlasmaMirrorNORTH:
+    spell-class: ".targeted.PulserSpell"
+    cast-item: skyMirror
+    block-type: "cyan_stained_glass"
+    interval: 5
+    total-pulses: 600
+    cooldown: 0
+    cap-per-player: 10
+    max-distance: 50
+    range: 4
+    unbreakable: false
+    spells:
+        - MirrorBallNORTH
+MirrorBallNORTH:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0,1.2,0
+    projectile-acceleration: 0
+    projectile-velocity: 0.00001
+    projectile-gravity: 0
+    tick-interval: 2
+    spell-interval: 1
+    max-distance: 500
+    max-duration: 0.5
+    hit-radius: 1.5
+    height-from-surface: 0.1
+    hug-surface: true
+    hit-self: false
+    hit-ground: false
+    hit-players: true
+    hit-non-players: true
+    hit-air-at-end: false
+    hit-air-during: true
+    hit-air-after-duration: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    power-affects-velocity: false
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes
+    spell: None
+    spell-on-hit-air: None
+    spell-on-duration-end: None
+    beneficial: false
+    target-players: true
+    helper-spell: true
+    interactions:
+        - BeaconBlast MirrorNORTH
+        - MirrorSOUTH MirrorNORTH
+        - MirrorEAST MirrorNORTH
+        - MirrorWEST MirrorNORTH
+    effects:
+      1:
+        position: special
+        effect: particles
+        particle-name: redstone
+        color: 00bfff
+        horiz-spread: 0.1
+        vert-spread: 0.1
+        speed: 0
+        count: 3
+MirrorNORTH:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-horiz-offset: 180
+    max-duration: 5
+    velocity: 15
+    change-pitch: false
+    hit-ground: false
+    stop-on-hit-ground: false
+    beneficial: false
+    hit-air-after-duration: true
+    spell-on-hit-entity: MirrorPain
+    spell-on-duration-end: None
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.1
+            vert-spread: 0.1
+            size: 1
+            count: 5
+            
+PlasmaMirrorSOUTH:
+    spell-class: ".targeted.PulserSpell"
+    block-type: "cyan_stained_glass"
+    cast-item: skyMirror
+    interval: 5
+    total-pulses: 600
+    cooldown: 0
+    cap-per-player: 10
+    max-distance: 50
+    range: 4
+    unbreakable: false
+    spells:
+        - MirrorBallSOUTH
+MirrorBallSOUTH:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0,1.2,0
+    projectile-acceleration: 0
+    projectile-velocity: 0.00001
+    projectile-gravity: 0
+    tick-interval: 2
+    spell-interval: 1
+    max-distance: 500
+    max-duration: 0.5
+    hit-radius: 1.5
+    height-from-surface: 0.1
+    hug-surface: true
+    hit-self: false
+    hit-ground: false
+    hit-players: true
+    hit-non-players: true
+    hit-air-at-end: false
+    hit-air-during: true
+    hit-air-after-duration: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    power-affects-velocity: false
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes
+    spell: None
+    spell-on-hit-air: None
+    spell-on-duration-end: None
+    beneficial: false
+    target-players: true
+    helper-spell: true
+    interactions:
+        - BeaconBlast MirrorSOUTH
+        - MirrorNORTH MirrorSOUTH
+        - MirrorEAST MirrorSOUTH
+        - MirrorWEST MirrorSOUTH
+    effects:
+      1:
+        position: special
+        effect: particles
+        particle-name: redstone
+        color: 00bfff
+        horiz-spread: 0.1
+        vert-spread: 0.1
+        speed: 0
+        count: 3
+MirrorSOUTH:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    # projectile-horiz-offset: 0
+    max-duration: 5
+    velocity: 15
+    change-pitch: false
+    hit-ground: false
+    stop-on-hit-ground: false
+    beneficial: false
+    hit-air-after-duration: true
+    spell-on-hit-entity: MirrorPain
+    spell-on-duration-end: None
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.1
+            vert-spread: 0.1
+            size: 1
+            count: 5
+            
+PlasmaMirrorEAST:
+    spell-class: ".targeted.PulserSpell"
+    cast-item: skyMirror
+    block-type: "cyan_stained_glass"
+    interval: 5
+    total-pulses: 600
+    cooldown: 0
+    cap-per-player: 10
+    max-distance: 50
+    range: 4
+    unbreakable: false
+    spells:
+        - MirrorBallEAST
+MirrorBallEAST:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0,1.2,0
+    projectile-acceleration: 0
+    projectile-velocity: 0.00001
+    projectile-gravity: 0
+    tick-interval: 2
+    spell-interval: 1
+    max-distance: 500
+    max-duration: 0.5
+    hit-radius: 1.5
+    height-from-surface: 0.1
+    hug-surface: true
+    hit-self: false
+    hit-ground: false
+    hit-players: true
+    hit-non-players: true
+    hit-air-at-end: false
+    hit-air-during: true
+    hit-air-after-duration: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    power-affects-velocity: false
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes
+    spell: None
+    spell-on-hit-air: None
+    spell-on-duration-end: None
+    beneficial: false
+    target-players: true
+    helper-spell: true
+    interactions:
+        - BeaconBlast MirrorEAST
+        - MirrorNORTH MirrorEAST
+        - MirrorSOUTH MirrorEAST
+        - MirrorWEST MirrorEAST
+    effects:
+      1:
+        position: special
+        effect: particles
+        particle-name: redstone
+        color: 00bfff
+        horiz-spread: 0.1
+        vert-spread: 0.1
+        speed: 0
+        count: 3
+MirrorEAST:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-horiz-offset: 270
+    max-duration: 5
+    velocity: 15
+    change-pitch: false
+    hit-ground: false
+    stop-on-hit-ground: false
+    beneficial: false
+    hit-air-after-duration: true
+    spell-on-hit-entity: MirrorPain
+    spell-on-duration-end: None
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.1
+            vert-spread: 0.1
+            size: 1
+            count: 5
+            
+PlasmaMirrorWEST:
+    spell-class: ".targeted.PulserSpell"
+    cast-item: skyMirror
+    block-type: "cyan_stained_glass"
+    interval: 5
+    total-pulses: 600
+    cooldown: 0
+    cap-per-player: 10
+    max-distance: 50
+    range: 4
+    unbreakable: false
+    spells:
+        - MirrorBallWEST
+MirrorBallWEST:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0,1.2,0
+    projectile-acceleration: 0
+    projectile-velocity: 0.00001
+    projectile-gravity: 0
+    tick-interval: 2
+    spell-interval: 1
+    max-distance: 500
+    max-duration: 0.5
+    hit-radius: 1.5
+    height-from-surface: 0.1
+    hug-surface: true
+    hit-self: false
+    hit-ground: false
+    hit-players: true
+    hit-non-players: true
+    hit-air-at-end: false
+    hit-air-during: true
+    hit-air-after-duration: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    power-affects-velocity: false
+    can-target: monsters, players, animals, invisibles, wolves, spiders, slimes
+    spell: None
+    spell-on-hit-air: None
+    spell-on-duration-end: None
+    beneficial: false
+    target-players: true
+    helper-spell: true
+    interactions:
+        - BeaconBlast MirrorWEST
+        - MirrorNORTH MirrorWEST
+        - MirrorSOUTH MirrorWEST
+        - MirrorEAST MirrorWEST
+    effects:
+      1:
+        position: special
+        effect: particles
+        particle-name: redstone
+        color: 00bfff
+        horiz-spread: 0.1
+        vert-spread: 0.1
+        speed: 0
+        count: 3
+MirrorWEST:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-horiz-offset: 90
+    max-duration: 5
+    velocity: 15
+    change-pitch: false
+    hit-ground: false
+    stop-on-hit-ground: false
+    beneficial: false
+    hit-air-after-duration: true
+    spell-on-hit-entity: MirrorPain
+    spell-on-duration-end: None
+    effects:
+           1:
+            position: special
+            effect: particles
+            particle-name: redstone
+            color: 00bfff
+            horiz-spread: 0.1
+            vert-spread: 0.1
+            size: 1
+            count: 5
+
+MirrorPain:
+    spell-class: ".targeted.PainSpell"
+    damage: 30
+    range: 200
+    ignore-armor: true
+    check-plugins: true
