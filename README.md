@@ -14,5 +14,5 @@ of what is even possible with MagicSpells. If you find out some way to make a sy
 even better, please make it known. That way, we can further the field and make the previously
 impossible possible with a simple Minecraft plugin.
 
-This repository also serves as my portfolio. Please consult my post on #looking-for-work if
-you are interested in utilizing my services. My discord is sky#5095.
+This repository also serves as my portfolio. (Keep an eye out on #looking-for-work. My discord
+is sky#5095.)
