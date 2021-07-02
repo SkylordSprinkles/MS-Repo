@@ -1,0 +1,393 @@
+ # OSU! v0.0
+ # Very much a WIP; Just publishing for exposure.
+ 
+ # Inputs 
+HotbarSelectPassive1:
+    spell-class: ".PassiveSpell"
+    # triggers:
+        # - hotbarselect
+    spells:
+        - HotbarSelect1DELAY(mode=hard)
+        - HotbarSelect2DELAY(mode=hard)
+HotbarSelect1DELAY:
+    spell-class: ".MultiSpell"
+    spells:
+        - DELAY 1
+        - HotbarSelect1Dummy(mode=hard)
+HotbarSelect1Dummy:
+    spell-class: ".instant.DummySpell"
+    str-cast-self: "&bDEBUG: Pressed 1"
+    modifiers:
+        - slotselected =0 required
+ 
+HotbarSelect2DELAY:
+    spell-class: ".MultiSpell"
+    spells:
+        - DELAY 1
+        - HotbarSelect2Dummy(mode=hard)
+HotbarSelect2Dummy:
+    spell-class: ".instant.DummySpell"
+    str-cast-self: "&bDEBUG: Pressed 2"
+    modifiers:
+        - slotselected =1 required
+        
+HotbarSelectPassive2:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted HotbarSelect1Dummy
+        - spellcasted HotbarSelect2Dummy
+    spells:
+        - OSUBeam(mode=hard)
+        - SlotReset(mode=hard)
+SlotReset:
+    spell-class: ".targeted.SlotSelectSpell"
+    target-self: true
+    slot: 8
+    ignore-slot-bounds: false
+    
+ # Targeter
+OSUBeam:
+    spell-class: ".instant.BeamSpell"
+    relative-offset: "0,1.6,0"
+    beam-width: 1
+    max-distance: 20
+    interval: 0.5
+    stop-on-hit-ground: true
+    spell-on-travel: OSUTargeter(mode=full)
+OSUTargeter:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-velocity: 0.001
+    tick-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.2
+    stop-on-hit-entity: false
+    stop-on-hit-ground: true
+    change-pitch: true
+    spell: nonetargeted
+    # effects:
+        # 1:
+          # position: special
+          # effect: particles
+          # particle-name: redstone
+          # color: ff0000
+          # horiz-spread: 0
+          # vert-spread: 0
+          # size: 1
+          # speed: 0
+          # count: 1 
+    
+ # Hit Circle
+OSUTest:
+    spell-class: ".MultiSpell"
+    spells:
+        - OSUPulserPartProj1
+        - OSUPulserPartProj2
+        - OSUPulserPartProj3
+ 
+OSUPulserPartProj1:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 2,1,-1
+    projectile-velocity: 0.001
+    hit-radius: 0.5
+    max-duration: 1
+    change-pitch: true
+    tick-interval: 1
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    hit-air-after-duration: true
+    spell: nonetargeted
+    spell-on-duration-end: OSUPulser
+    change-pitch: false
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: ff0000
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1  
+OSUPulserPartProj2:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 2,1,0
+    projectile-velocity: 0.001
+    hit-radius: 0.5
+    max-duration: 2
+    change-pitch: true
+    tick-interval: 1
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    hit-air-after-duration: true
+    spell: nonetargeted
+    spell-on-duration-end: OSUPulser
+    change-pitch: false
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: ff0000
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1  
+OSUPulserPartProj3:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 2,1,1
+    projectile-velocity: 0.001
+    hit-radius: 0.5
+    max-duration: 3
+    change-pitch: true
+    tick-interval: 1
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    hit-air-after-duration: true
+    spell: nonetargeted
+    spell-on-duration-end: OSUPulser
+    change-pitch: false
+    # effects:
+           # 1:
+            # position: special
+            # effect: particles
+            # particle-name: redstone
+            # color: ff0000
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # speed: 0
+            # count: 1  
+            
+OSUPulser:
+    spell-class: ".targeted.PulserSpell"
+    range: 1
+    total-pulses: 1
+    interval: 10
+    max-distance: 20
+    block-type: oak_planks
+    str-at-cap: "DEBUG: Too many OSU! Pulsers"
+    cap-per-player: 2
+    spells: 
+        - HitCircle
+        - ApproachCircle1
+ 
+HitCircle:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-velocity: 0
+    tick-interval: 1
+    max-duration: 0.1
+    hit-radius: 0.5
+    hit-ground: true
+    hit-air-after-duration: true
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    change-pitch: false
+    spell: nonetargeted
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 5
+            particle: REDSTONE
+            color: e15e98
+            particles: 50
+            speed: 0
+            radius: 0.6
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+            
+ApproachCircle1: &ApproachCircleAnchor
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-velocity: 0
+    tick-interval: 1
+    max-duration: 0.2
+    hit-radius: 0.5
+    hit-ground: true
+    hit-air-after-duration: true
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    change-pitch: false
+    spell: nonetargeted
+    spell-on-duration-end: ApproachCircle2
+    interactions:
+        - OSUTargeter OSUSOC1(mode=hard)
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 1.5
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+ApproachCircle2:
+    <<: *ApproachCircleAnchor
+    spell-on-duration-end: ApproachCircle3
+    interactions:
+        - OSUTargeter OSUSOC2(mode=hard)
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 1.3
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+ApproachCircle3:
+    <<: *ApproachCircleAnchor
+    spell-on-duration-end: ApproachCircle4
+    interactions:
+        - OSUTargeter OSUSOC3(mode=hard)
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 1.1
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+ApproachCircle4:
+    <<: *ApproachCircleAnchor
+    spell-on-duration-end: ApproachCircle5
+    interactions:
+        - OSUTargeter OSUSOC4(mode=hard)
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 0.9
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+ApproachCircle5:
+    <<: *ApproachCircleAnchor
+    spell-on-duration-end: ApproachCircle6
+    interactions:
+        - OSUTargeter OSUSOC5(mode=hard)
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 0.7
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+ApproachCircle6:
+    <<: *ApproachCircleAnchor
+    spell-on-duration-end: OSUMiss(mode=hard)
+    interactions:
+        - OSUTargeter OSUSOC6(mode=hard)
+    str-cast-self: "&bDEBUG: Miss!"
+    effects:
+       1:
+        effect: effectlib
+        position: target
+        effectlib:
+            class: Circle
+            iterations: 1
+            particle: REDSTONE
+            color: ffffff
+            particles: 50
+            speed: 0
+            radius: 0.5
+            pitch: 90
+            whole_circle: true
+            angular_velocity_z: 0
+            angular_velocity_y: 0
+            angular_velocity_x: 0
+            
+OSUMiss:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-velocity: 0
+    tick-interval: 1
+    max-duration: 0.3
+    hit-radius: 0.5
+    hit-ground: true
+    hit-air-after-duration: true
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    change-pitch: false
+    spell: nonetargeted
+    str-cast-self: "&bDEBUG: Miss!"
+            
+ # SOCs
+OSUSOC1: &OSUSOCAnchor
+    spell-class: ".targeted.AreaEffectSpell"
+    always-granted: true
+    helper-spell: true
+    fail-if-no-targets: false
+    horizontal-radius: 1
+    vertical-radius: 1
+    str-cast-self: "&bDEBUG: Horrible!"
+    spells:
+        - nonetargeted
+OSUSOC2:
+    <<: *OSUSOCAnchor
+    str-cast-self: "&bDEBUG: Bad!"
+OSUSOC3:
+    <<: *OSUSOCAnchor
+    str-cast-self: "&bDEBUG: Okay!"
+OSUSOC4:
+    <<: *OSUSOCAnchor
+    str-cast-self: "&bDEBUG: Good!"
+OSUSOC5:
+    <<: *OSUSOCAnchor
+    str-cast-self: "&bDEBUG: Great!"
+OSUSOC6:
+    <<: *OSUSOCAnchor
+    str-cast-self: "&bDEBUG: Perfect!"
