@@ -1,0 +1,56 @@
+ # Projectiles that bounce more realistically off of walls.
+ # Note that this is different from recasting on-hit-ground to make projectiles bounce on the floor.
+
+ # Borrows dropped item's physics to bounce off of vertical walls.
+BounceTest1:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,1.6,0"
+    projectile-velocity: 20
+    tick-interval: 1
+    max-distance: 30
+    stop-on-hit-entity: false
+    stop-on-hit-ground: true
+    change-pitch: true
+    spell: nonetargeted
+    spell-on-hit-ground: itemprojectilespell
+    effects:
+        1:
+          position: special
+          effect: particles
+          particle-name: redstone
+          color: ff0000
+          horiz-spread: 0
+          vert-spread: 0
+          speed: 0
+          count: 2
+itemprojectilespell:
+    spell-class: ".instant.ItemProjectileSpell"
+    item: stone_button
+    spell-delay: 0
+    speed: 0.5
+    vert-speed: 0 
+    hit-radius: 1
+    y-offset: 0
+    remove-delay: 3
+    spell-interval: 3
+    spell-on-tick: BounceTest2
+BounceTest2:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: "0,0,0"
+    projectile-velocity: 20
+    tick-interval: 1
+    max-distance: 30
+    stop-on-hit-entity: false
+    stop-on-hit-ground: true
+    change-pitch: true
+    spell: nonetargeted
+    effects:
+        1:
+          position: special
+          effect: particles
+          particle-name: redstone
+          color: 00ff00
+          horiz-spread: 0
+          vert-spread: 0
+          speed: 0
+          count: 2
