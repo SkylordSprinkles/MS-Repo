@@ -1,0 +1,279 @@
+ #####################
+ # PPJ Dance Casting #
+ #####################
+ # Direct Cast Model # 
+Dash_HitboxMulti:
+    spell-class: ".MultiSpell"
+    # right-click-cast-item: iron_sword
+    spells:
+        - Dash_PPJN(mode=full)
+        - Dash_PPJS(mode=full)
+        - Dash_PPJE(mode=full)
+        - Dash_PPJW(mode=full)
+        - Dash_PPJNE(mode=full)
+        - Dash_PPJNW(mode=full)
+        - Dash_PPJSE(mode=full)
+        - Dash_PPJSW(mode=full)
+ 
+Dash_PPJN: &Dash_PPJANCHOR
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0.7,1,0
+    projectile-velocity: 0.01
+    tick-interval: 0.3
+    hit-radius: 0.1
+    max-duration: 0.3
+    change-pitch: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    hit-self: true
+    hit-players: false
+    hit-non-players: false
+    spell: Dash_LeapN(mode=hard)
+    effects:
+        eff1:
+            position: special
+            effect: particles
+            particle-name: REDSTONE
+            color: ff0000
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            count: 3
+Dash_PPJS:
+    <<: *Dash_PPJANCHOR
+    relative-offset: -0.7,1,0
+    spell: Dash_LeapS(mode=hard)
+Dash_PPJE:
+    <<: *Dash_PPJANCHOR
+    relative-offset: 0,1,0.7
+    spell: Dash_LeapE(mode=hard)
+Dash_PPJW:
+    <<: *Dash_PPJANCHOR
+    relative-offset: 0,1,-0.7
+    spell: Dash_LeapW(mode=hard)
+    
+Dash_PPJNE:
+    <<: *Dash_PPJANCHOR
+    relative-offset: 0.7,1,0.7
+    spell: Dash_LeapNE(mode=hard)
+Dash_PPJNW:
+    <<: *Dash_PPJANCHOR
+    relative-offset: 0.7,1,-0.7
+    spell: Dash_LeapNW(mode=hard)
+Dash_PPJSE:
+    <<: *Dash_PPJANCHOR
+    relative-offset: -0.7,1,0.7
+    spell: Dash_LeapSE(mode=hard)
+Dash_PPJSW:
+    <<: *Dash_PPJANCHOR
+    relative-offset: -0.7,1,-0.7
+    spell: Dash_LeapSW(mode=hard)
+    
+Dash_LeapN:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: 10
+    vertical-force: 0
+    cancel-damage: false
+    target-self: true
+Dash_LeapS:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: -10
+    vertical-force: 0
+    cancel-damage: false
+    target-self: true
+Dash_LeapE:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: 10
+    vertical-force: 0
+    rotation: 90
+    cancel-damage: false
+    target-self: true
+Dash_LeapW:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: 10
+    vertical-force: 0
+    rotation: -90
+    cancel-damage: false
+    target-self: true
+    
+Dash_LeapNE:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: 10
+    vertical-force: 0
+    rotation: 45
+    cancel-damage: false
+    target-self: true
+Dash_LeapNW:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: 10
+    vertical-force: 0
+    rotation: -45
+    cancel-damage: false
+    target-self: true
+Dash_LeapSE:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: -10
+    vertical-force: 0
+    rotation: -45
+    cancel-damage: false
+    target-self: true
+Dash_LeapSW:
+    spell-class: ".targeted.ForcetossSpell"
+    horizontal-force: -10
+    vertical-force: 0
+    rotation: 45
+    cancel-damage: false
+    target-self: true
+    
+    
+ # Pulser Cast Model #
+PulserDC:
+    spell-class: ".MultiSpell"
+    # right-click-cast-item: iron_sword
+    spells:
+        - PulserDC_Mark(mode=full)
+        - DELAY 1
+        - PulserDC_Targeter(mode=full)
+ 
+PulserDC_Targeter:
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0,3,0
+    projectile-velocity: 0.001
+    tick-interval: 1
+    max-duration: 0.01
+    special-effect-interval: 1
+    stop-on-hit-entity: false
+    stop-on-hit-ground: false
+    hit-air-after-duration: true
+    change-pitch: false
+    spell-on-duration-end: PulserDC_Pulser(mode=full)
+    # effects:
+        # eff1:
+            # position: special
+            # effect: particles
+            # particle-name: REDSTONE
+            # color: ff0000
+            # horiz-spread: 0
+            # vert-spread: 0
+            # size: 1
+            # count: 3
+PulserDC_Pulser:
+    spell-class: ".targeted.PulserSpell" # Note that totems can be oriented off of the block grid.
+    total-pulses: 240
+    interval: 5
+    max-distance: 5
+    # block-type: oak_planks
+    block-type: air
+    only-count-on-success: false
+    cap-per-player: 1
+    str-at-cap: "You can only control 1 pulser!"
+    spells:
+        - PulserDC_Input_North(mode=full)
+        - PulserDC_Input_South(mode=full)
+        - PulserDC_Input_East(mode=full)
+        - PulserDC_Input_West(mode=full)
+        
+ # Reset Position    
+PulserDC_Mark:
+    spell-class: ".instant.MarkSpell"
+    permanent-marks: false
+    str-cast-self: "DEBUG: Marked."
+
+PulserDC_Recall_Passive:
+    spell-class: ".PassiveSpell"
+    triggers:
+        - spellcasted PulserDC_North
+        - spellcasted PulserDC_South
+        - spellcasted PulserDC_East
+        - spellcasted PulserDC_West
+    spells:
+        - PulserDC_Recall(mode=hard)
+PulserDC_Recall:
+    spell-class: ".instant.RecallSpell"
+    mark-spell: PulserDC_Mark
+ 
+ # Directional Inputs. Note that players can slip in between two PPJs.
+PulserDC_Input_North: &PulserDC_Input_ANCHOR
+    spell-class: ".instant.ParticleProjectileSpell"
+    relative-offset: 0.9,-3,0
+    projectile-velocity: 0.01
+    tick-interval: 0.3
+    hit-radius: 0.1
+    max-duration: 0.3
+    change-pitch: false
+    stop-on-hit-entity: true
+    stop-on-hit-ground: false
+    hit-self: true
+    hit-players: false
+    hit-non-players: false
+    spell: PulserDC_North(mode=hard)
+    effects:
+        eff1:
+            position: special
+            effect: particles
+            particle-name: REDSTONE
+            color: ff0000
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            count: 3
+PulserDC_Input_South:
+    <<: *PulserDC_Input_ANCHOR
+    relative-offset: -0.9,-3,0
+    spell: PulserDC_South(mode=hard)
+    effects:
+        eff1:
+            position: special
+            effect: particles
+            particle-name: REDSTONE
+            color: 00ff00
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            count: 3
+PulserDC_Input_East:
+    <<: *PulserDC_Input_ANCHOR
+    relative-offset: 0,-3,0.9
+    spell: PulserDC_East(mode=hard)
+    effects:
+        eff1:
+            position: special
+            effect: particles
+            particle-name: REDSTONE
+            color: 0000ff
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            count: 3
+PulserDC_Input_West:
+    <<: *PulserDC_Input_ANCHOR
+    relative-offset: 0,-3,-0.9
+    spell: PulserDC_West(mode=hard)
+    effects:
+        eff1:
+            position: special
+            effect: particles
+            particle-name: REDSTONE
+            color: ff00ff
+            horiz-spread: 0
+            vert-spread: 0
+            size: 1
+            count: 3
+    
+ # Resolution
+PulserDC_North:
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    str-cast-self: "DEBUG: W"
+PulserDC_South:
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    str-cast-self: "DEBUG: S"
+PulserDC_East:
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    str-cast-self: "DEBUG: D"
+PulserDC_West:
+    spell-class: ".targeted.DummySpell"
+    target-self: true
+    str-cast-self: "DEBUG: A"
